@@ -11,15 +11,34 @@ import {
   Award,
   BarChart3,
   Calendar,
-  ArrowRight
+  ArrowRight,
+  LogOut,
+  User
 } from 'lucide-react';
 import { generateMockAnalytics } from '@/lib/mockData';
 import { AreaChart, Area, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
+import { useAuth } from '@/contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 
 const Dashboard = () => {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const analytics = generateMockAnalytics();
   
   const recentSessions = JSON.parse(localStorage.getItem('interviewHistory') || '[]').slice(-5).reverse();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -36,19 +55,50 @@ const Dashboard = () => {
             </div>
             <span className="text-lg font-display font-bold">InterviewAI</span>
           </Link>
-          <Link to="/setup">
-            <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
-              <Play className="w-4 h-4 mr-2" />
-              New Interview
-            </Button>
-          </Link>
+          <div className="flex items-center gap-4">
+            <Link to="/setup">
+              <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
+                <Play className="w-4 h-4 mr-2" />
+                New Interview
+              </Button>
+            </Link>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                  <Avatar className="h-10 w-10">
+                    <AvatarFallback className="bg-primary/20 text-primary">
+                      {user?.name?.charAt(0)?.toUpperCase() || 'U'}
+                    </AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56" align="end">
+                <div className="flex items-center gap-2 p-2">
+                  <Avatar className="h-8 w-8">
+                    <AvatarFallback className="bg-primary/20 text-primary text-sm">
+                      {user?.name?.charAt(0)?.toUpperCase() || 'U'}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex flex-col">
+                    <p className="text-sm font-medium">{user?.name}</p>
+                    <p className="text-xs text-muted-foreground">{user?.email}</p>
+                  </div>
+                </div>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleLogout} className="text-destructive cursor-pointer">
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Logout
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
       </nav>
 
       <main className="relative z-10 max-w-7xl mx-auto p-6">
         {/* Welcome Section */}
         <div className="mb-8">
-          <h1 className="text-3xl font-display font-bold mb-2">Welcome back!</h1>
+          <h1 className="text-3xl font-display font-bold mb-2">Welcome back, {user?.name?.split(' ')[0]}!</h1>
           <p className="text-muted-foreground">Track your progress and continue improving.</p>
         </div>
 
