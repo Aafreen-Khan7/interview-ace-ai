@@ -19,12 +19,12 @@ const Landing = () => {
           <span className="text-xl font-display font-bold">InterviewAI</span>
         </div>
         <div className="flex items-center gap-4">
-          <Link to="/dashboard">
-            <Button variant="ghost">Dashboard</Button>
+          <Link to="/auth">
+            <Button variant="ghost">Login</Button>
           </Link>
-          <Link to="/setup">
+          <Link to="/auth">
             <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
-              Start Practice
+              Get Started
             </Button>
           </Link>
         </div>

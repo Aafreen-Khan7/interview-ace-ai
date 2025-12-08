@@ -51,11 +51,11 @@ export interface InterviewSession {
 export interface UserProfile {
   id: string;
   email: string;
-  displayName: string;
+  name: string;
   avatar?: string;
   totalInterviews: number;
   averageScore: number;
-  streak: number;
+  streakDays: number;
   badges: string[];
   createdAt: Date;
 }
