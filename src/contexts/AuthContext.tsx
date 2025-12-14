@@ -1,117 +1,143 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signInWithPopup,
+  signOut,
+  onAuthStateChanged,
+  User as FirebaseUser,
+} from 'firebase/auth';
+import { auth, googleProvider } from '@/lib/firebase';
+import { createUserProfile, getUserProfile, updateUserProfile } from '@/services/firebaseService';
 import { UserProfile } from '@/types/interview';
 
 interface AuthContextType {
   user: UserProfile | null;
+  firebaseUser: FirebaseUser | null;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   signup: (email: string, password: string, name: string) => Promise<{ success: boolean; error?: string }>;
-  logout: () => void;
-  updateProfile: (updates: Partial<UserProfile>) => void;
+  loginWithGoogle: () => Promise<{ success: boolean; error?: string }>;
+  logout: () => Promise<void>;
+  updateProfile: (updates: Partial<UserProfile>) => Promise<void>;
+  refreshProfile: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const USERS_STORAGE_KEY = 'interview_platform_users';
-const CURRENT_USER_KEY = 'interview_platform_current_user';
-
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<UserProfile | null>(null);
+  const [firebaseUser, setFirebaseUser] = useState<FirebaseUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check for existing session
-    const savedUser = localStorage.getItem(CURRENT_USER_KEY);
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-    }
-    setIsLoading(false);
+    const unsubscribe = onAuthStateChanged(auth, async (fbUser) => {
+      setFirebaseUser(fbUser);
+      
+      if (fbUser) {
+        try {
+          let profile = await getUserProfile(fbUser.uid);
+          
+          if (!profile) {
+            // Create profile for new users (e.g., Google sign-in)
+            profile = await createUserProfile(
+              fbUser.uid,
+              fbUser.email || '',
+              fbUser.displayName || 'User'
+            );
+          }
+          
+          setUser(profile);
+        } catch (error) {
+          console.error('Error fetching user profile:', error);
+          setUser(null);
+        }
+      } else {
+        setUser(null);
+      }
+      
+      setIsLoading(false);
+    });
+
+    return () => unsubscribe();
   }, []);
 
-  const getUsers = (): Record<string, { password: string; profile: UserProfile }> => {
-    const users = localStorage.getItem(USERS_STORAGE_KEY);
-    return users ? JSON.parse(users) : {};
-  };
-
-  const saveUsers = (users: Record<string, { password: string; profile: UserProfile }>) => {
-    localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(users));
-  };
-
   const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
-    // Simulate network delay
-    await new Promise(resolve => setTimeout(resolve, 800));
-
-    const users = getUsers();
-    const userRecord = users[email.toLowerCase()];
-
-    if (!userRecord) {
-      return { success: false, error: 'No account found with this email' };
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      return { success: true };
+    } catch (error: any) {
+      console.error('Login error:', error);
+      const errorMessages: Record<string, string> = {
+        'auth/user-not-found': 'No account found with this email',
+        'auth/wrong-password': 'Incorrect password',
+        'auth/invalid-email': 'Invalid email address',
+        'auth/too-many-requests': 'Too many attempts. Please try again later',
+        'auth/invalid-credential': 'Invalid email or password',
+      };
+      return { success: false, error: errorMessages[error.code] || 'Login failed' };
     }
-
-    if (userRecord.password !== password) {
-      return { success: false, error: 'Incorrect password' };
-    }
-
-    setUser(userRecord.profile);
-    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(userRecord.profile));
-    return { success: true };
   };
 
   const signup = async (email: string, password: string, name: string): Promise<{ success: boolean; error?: string }> => {
-    // Simulate network delay
-    await new Promise(resolve => setTimeout(resolve, 800));
-
-    const users = getUsers();
-    const emailLower = email.toLowerCase();
-
-    if (users[emailLower]) {
-      return { success: false, error: 'An account with this email already exists' };
+    try {
+      const result = await createUserWithEmailAndPassword(auth, email, password);
+      await createUserProfile(result.user.uid, email, name);
+      return { success: true };
+    } catch (error: any) {
+      console.error('Signup error:', error);
+      const errorMessages: Record<string, string> = {
+        'auth/email-already-in-use': 'An account with this email already exists',
+        'auth/weak-password': 'Password must be at least 6 characters',
+        'auth/invalid-email': 'Invalid email address',
+      };
+      return { success: false, error: errorMessages[error.code] || 'Signup failed' };
     }
-
-    if (password.length < 6) {
-      return { success: false, error: 'Password must be at least 6 characters' };
-    }
-
-    const newProfile: UserProfile = {
-      id: crypto.randomUUID(),
-      email: emailLower,
-      name,
-      createdAt: new Date(),
-      totalInterviews: 0,
-      averageScore: 0,
-      streakDays: 0,
-      badges: [],
-    };
-
-    users[emailLower] = { password, profile: newProfile };
-    saveUsers(users);
-    setUser(newProfile);
-    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(newProfile));
-    return { success: true };
   };
 
-  const logout = () => {
+  const loginWithGoogle = async (): Promise<{ success: boolean; error?: string }> => {
+    try {
+      await signInWithPopup(auth, googleProvider);
+      return { success: true };
+    } catch (error: any) {
+      console.error('Google login error:', error);
+      if (error.code === 'auth/popup-closed-by-user') {
+        return { success: false, error: 'Sign-in cancelled' };
+      }
+      return { success: false, error: 'Google sign-in failed' };
+    }
+  };
+
+  const logout = async () => {
+    await signOut(auth);
     setUser(null);
-    localStorage.removeItem(CURRENT_USER_KEY);
+    setFirebaseUser(null);
   };
 
-  const updateProfile = (updates: Partial<UserProfile>) => {
+  const updateProfileHandler = async (updates: Partial<UserProfile>) => {
     if (!user) return;
+    await updateUserProfile(user.id, updates);
+    setUser({ ...user, ...updates });
+  };
 
-    const updatedUser = { ...user, ...updates };
-    setUser(updatedUser);
-    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(updatedUser));
-
-    // Also update in users storage
-    const users = getUsers();
-    if (users[user.email]) {
-      users[user.email].profile = updatedUser;
-      saveUsers(users);
-    }
+  const refreshProfile = async () => {
+    if (!firebaseUser) return;
+    const profile = await getUserProfile(firebaseUser.uid);
+    if (profile) setUser(profile);
   };
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, signup, logout, updateProfile }}>
+    <AuthContext.Provider value={{
+      user,
+      firebaseUser,
+      isLoading,
+      login,
+      signup,
+      loginWithGoogle,
+      logout,
+      updateProfile: updateProfileHandler,
+      refreshProfile,
+    }}>
       {children}
     </AuthContext.Provider>
   );
