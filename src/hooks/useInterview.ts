@@ -5,7 +5,8 @@ import {
   QuestionFeedback,
   JobRole, 
   Difficulty, 
-  RoundType 
+  RoundType,
+  TIME_LIMITS
 } from '@/types/interview';
 import { generateInterviewQuestions, evaluateAnswer } from '@/lib/gemini';
 import { createInterviewSession, completeInterviewSession, updateUserStats } from '@/services/firebaseService';
@@ -17,12 +18,13 @@ interface UseInterviewReturn {
   isLoading: boolean;
   isGenerating: boolean;
   startInterview: (config: InterviewConfig) => Promise<void>;
-  submitAnswer: (answer: string) => Promise<QuestionFeedback>;
+  submitAnswer: (answer: string, timeTaken: number) => Promise<QuestionFeedback>;
   nextQuestion: () => void;
   endInterview: () => Promise<InterviewSession>;
   currentQuestion: InterviewQuestion | null;
   progress: number;
   error: string | null;
+  timeLimit: number;
 }
 
 export interface InterviewConfig {
@@ -93,7 +95,7 @@ export function useInterview(): UseInterviewReturn {
     }
   }, [firebaseUser]);
 
-  const submitAnswer = useCallback(async (answer: string): Promise<QuestionFeedback> => {
+  const submitAnswer = useCallback(async (answer: string, timeTaken: number): Promise<QuestionFeedback> => {
     if (!session) throw new Error('No active session');
     if (!firebaseUser) throw new Error('Not authenticated');
     
@@ -102,6 +104,16 @@ export function useInterview(): UseInterviewReturn {
     
     try {
       const currentQuestion = session.questions[currentQuestionIndex];
+      const timeLimit = currentQuestion.timeLimit;
+      
+      // Calculate time bonus/penalty
+      const percentUsed = timeTaken / timeLimit;
+      let timeBonus = 0;
+      if (percentUsed <= 0.3) timeBonus = 2;
+      else if (percentUsed <= 0.5) timeBonus = 1.5;
+      else if (percentUsed <= 0.7) timeBonus = 1;
+      else if (percentUsed <= 0.9) timeBonus = 0.5;
+      else if (percentUsed >= 1) timeBonus = -1;
       
       // Evaluate answer using Gemini AI
       const feedback = await evaluateAnswer(
@@ -110,6 +122,9 @@ export function useInterview(): UseInterviewReturn {
         session.jobRole,
         currentQuestion.expectedTopics || []
       );
+      
+      // Calculate adjusted score (capped at 10)
+      const adjustedScore = Math.min(10, Math.max(0, feedback.score + timeBonus));
       
       const questionFeedback: QuestionFeedback = {
         questionId: currentQuestion.id,
@@ -121,6 +136,9 @@ export function useInterview(): UseInterviewReturn {
         strengths: feedback.strengths,
         weaknesses: feedback.weaknesses,
         improvements: feedback.improvements,
+        timeTaken,
+        timeBonus,
+        adjustedScore,
       };
       
       // Update session state
@@ -153,8 +171,9 @@ export function useInterview(): UseInterviewReturn {
     if (!session) throw new Error('No active session');
     if (!firebaseUser) throw new Error('Not authenticated');
     
+    // Use adjusted scores for final total
     const totalScore = session.feedback.length > 0
-      ? Math.round(session.feedback.reduce((acc, f) => acc + f.score, 0) / session.feedback.length)
+      ? Math.round(session.feedback.reduce((acc, f) => acc + f.adjustedScore, 0) / session.feedback.length)
       : 0;
     
     const completedSession: InterviewSession = {
@@ -183,6 +202,7 @@ export function useInterview(): UseInterviewReturn {
 
   const currentQuestion = session?.questions[currentQuestionIndex] || null;
   const progress = session ? ((currentQuestionIndex + 1) / session.questions.length) * 100 : 0;
+  const timeLimit = session ? TIME_LIMITS[session.difficulty] : 120;
 
   return {
     session,
@@ -196,5 +216,6 @@ export function useInterview(): UseInterviewReturn {
     currentQuestion,
     progress,
     error,
+    timeLimit,
   };
 }

@@ -20,6 +20,7 @@ export interface InterviewQuestion {
   type: RoundType;
   expectedTopics?: string[];
   answerMode: AnswerMode;
+  timeLimit: number; // in seconds - varies by difficulty
 }
 
 export interface QuestionFeedback {
@@ -32,7 +33,17 @@ export interface QuestionFeedback {
   strengths: string[];
   weaknesses: string[];
   improvements: string[];
+  timeTaken: number; // seconds taken to answer
+  timeBonus: number; // bonus/penalty based on time
+  adjustedScore: number; // score after time adjustment
 }
+
+// Time limits based on difficulty (in seconds)
+export const TIME_LIMITS: Record<Difficulty, number> = {
+  beginner: 180, // 3 minutes
+  intermediate: 150, // 2.5 minutes
+  advanced: 120, // 2 minutes
+};
 
 export interface InterviewSession {
   id: string;

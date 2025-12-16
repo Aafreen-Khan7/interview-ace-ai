@@ -14,11 +14,16 @@ import {
   Loader2,
   CheckCircle2,
   XCircle,
-  ArrowRight
+  ArrowRight,
+  Clock,
+  TrendingUp,
+  TrendingDown
 } from 'lucide-react';
 import { useInterview } from '@/hooks/useInterview';
+import { InterviewTimer, useQuestionTimer } from '@/components/InterviewTimer';
 import { QuestionFeedback } from '@/types/interview';
 import { cn } from '@/lib/utils';
+import { toast } from 'sonner';
 
 const InterviewSession = () => {
   const location = useLocation();
@@ -36,7 +41,8 @@ const InterviewSession = () => {
     endInterview,
     currentQuestion,
     progress,
-    error
+    error,
+    timeLimit
   } = useInterview();
 
   const [answer, setAnswer] = useState('');
@@ -44,6 +50,8 @@ const InterviewSession = () => {
   const [cameraEnabled, setCameraEnabled] = useState(false);
   const [currentFeedback, setCurrentFeedback] = useState<QuestionFeedback | null>(null);
   const [showFeedback, setShowFeedback] = useState(false);
+  const [timerActive, setTimerActive] = useState(false);
+  const [elapsedTime, setElapsedTime] = useState(0);
   
   const videoRef = useRef<HTMLVideoElement>(null);
   const mediaStreamRef = useRef<MediaStream | null>(null);
@@ -55,6 +63,14 @@ const InterviewSession = () => {
     }
     startInterview(config);
   }, [config, navigate, startInterview]);
+
+  // Start timer when question loads
+  useEffect(() => {
+    if (session && currentQuestion && !showFeedback) {
+      setTimerActive(true);
+      setElapsedTime(0);
+    }
+  }, [session, currentQuestion, showFeedback, currentQuestionIndex]);
 
   const toggleCamera = useCallback(async () => {
     if (cameraEnabled) {
@@ -74,13 +90,34 @@ const InterviewSession = () => {
     }
   }, [cameraEnabled]);
 
+  const handleTimeUp = useCallback(() => {
+    toast.warning("Time's up! Submitting your current answer...");
+    if (answer.trim()) {
+      handleSubmitAnswer();
+    } else {
+      // Auto-submit with empty answer penalty
+      handleSubmitAnswer();
+    }
+  }, [answer]);
+
+  const handleTimeUpdate = useCallback((elapsed: number) => {
+    setElapsedTime(elapsed);
+  }, []);
+
   const handleSubmitAnswer = async () => {
-    if (!answer.trim() || isLoading) return;
+    if (isLoading) return;
     
-    const feedback = await submitAnswer(answer);
-    setCurrentFeedback(feedback);
-    setShowFeedback(true);
-    setAnswer('');
+    setTimerActive(false);
+    const timeTaken = elapsedTime;
+    
+    try {
+      const feedback = await submitAnswer(answer || "(No answer provided)", timeTaken);
+      setCurrentFeedback(feedback);
+      setShowFeedback(true);
+      setAnswer('');
+    } catch (err) {
+      // Error handled in hook
+    }
   };
 
   const handleNextQuestion = async () => {
@@ -91,12 +128,12 @@ const InterviewSession = () => {
       nextQuestion();
       setShowFeedback(false);
       setCurrentFeedback(null);
+      setElapsedTime(0);
     }
   };
 
   const toggleRecording = () => {
     setIsRecording(!isRecording);
-    // Voice recording would be implemented here with Web Speech API
   };
 
   if (error) {
@@ -224,24 +261,45 @@ const InterviewSession = () => {
           <div className="lg:col-span-2 order-1 lg:order-2 space-y-6">
             {!showFeedback ? (
               <>
-                {/* Question Card */}
-                <Card className="glass-card border-primary/30 glow-effect">
-                  <CardContent className="p-6">
-                    <div className="flex items-start gap-4">
-                      <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
-                        <Brain className="w-5 h-5 text-primary" />
+                {/* Timer and Question Card */}
+                <div className="flex gap-4">
+                  {/* Timer */}
+                  <Card className="glass-card border-border/50 flex-shrink-0">
+                    <CardContent className="p-4">
+                      <InterviewTimer
+                        timeLimit={currentQuestion.timeLimit || timeLimit}
+                        isActive={timerActive && !isLoading}
+                        onTimeUp={handleTimeUp}
+                        onTimeUpdate={handleTimeUpdate}
+                      />
+                    </CardContent>
+                  </Card>
+                  
+                  {/* Question Card */}
+                  <Card className="glass-card border-primary/30 glow-effect flex-1">
+                    <CardContent className="p-6">
+                      <div className="flex items-start gap-4">
+                        <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
+                          <Brain className="w-5 h-5 text-primary" />
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center justify-between mb-2">
+                            <p className="text-xs text-primary uppercase tracking-wide">
+                              {currentQuestion.type} Question
+                            </p>
+                            <span className="text-xs text-muted-foreground flex items-center gap-1">
+                              <Clock className="w-3 h-3" />
+                              {Math.floor((currentQuestion.timeLimit || timeLimit) / 60)}:{((currentQuestion.timeLimit || timeLimit) % 60).toString().padStart(2, '0')} limit
+                            </span>
+                          </div>
+                          <p className="text-lg font-medium leading-relaxed">
+                            {currentQuestion.question}
+                          </p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="text-xs text-primary mb-2 uppercase tracking-wide">
-                          {currentQuestion.type} Question
-                        </p>
-                        <p className="text-lg font-medium leading-relaxed">
-                          {currentQuestion.question}
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
+                </div>
 
                 {/* Answer Input */}
                 <Card className="glass-card border-border/50">
@@ -269,7 +327,7 @@ const InterviewSession = () => {
                       </span>
                       <Button
                         onClick={handleSubmitAnswer}
-                        disabled={!answer.trim() || isLoading}
+                        disabled={isLoading}
                         className="bg-primary text-primary-foreground hover:bg-primary/90"
                       >
                         {isLoading ? (
@@ -294,12 +352,39 @@ const InterviewSession = () => {
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between mb-6">
                     <h3 className="text-xl font-display font-bold">Question Feedback</h3>
-                    <div className="flex items-center gap-2">
-                      <span className="text-3xl font-display font-bold text-primary">
-                        {currentFeedback?.score}
-                      </span>
-                      <span className="text-muted-foreground">/10</span>
+                    <div className="flex items-center gap-4">
+                      {/* Time bonus display */}
+                      {currentFeedback?.timeBonus !== 0 && (
+                        <div className={cn(
+                          "flex items-center gap-1 px-2 py-1 rounded-full text-sm font-medium",
+                          currentFeedback?.timeBonus && currentFeedback.timeBonus > 0 
+                            ? "bg-success/20 text-success" 
+                            : "bg-destructive/20 text-destructive"
+                        )}>
+                          {currentFeedback?.timeBonus && currentFeedback.timeBonus > 0 ? (
+                            <TrendingUp className="w-3 h-3" />
+                          ) : (
+                            <TrendingDown className="w-3 h-3" />
+                          )}
+                          {currentFeedback?.timeBonus && currentFeedback.timeBonus > 0 ? '+' : ''}
+                          {currentFeedback?.timeBonus?.toFixed(1)} time bonus
+                        </div>
+                      )}
+                      <div className="flex items-center gap-2">
+                        <span className="text-3xl font-display font-bold text-primary">
+                          {currentFeedback?.adjustedScore.toFixed(1)}
+                        </span>
+                        <span className="text-muted-foreground">/10</span>
+                      </div>
                     </div>
+                  </div>
+
+                  {/* Time taken display */}
+                  <div className="flex items-center gap-2 mb-4 text-sm text-muted-foreground">
+                    <Clock className="w-4 h-4" />
+                    Time taken: {Math.floor((currentFeedback?.timeTaken || 0) / 60)}:{((currentFeedback?.timeTaken || 0) % 60).toString().padStart(2, '0')}
+                    <span className="mx-2">•</span>
+                    Base score: {currentFeedback?.score}/10
                   </div>
 
                   {/* Score Breakdown */}

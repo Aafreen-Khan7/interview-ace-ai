@@ -1,4 +1,4 @@
-import { InterviewQuestion, JobRole, Difficulty, RoundType } from '@/types/interview';
+import { InterviewQuestion, JobRole, Difficulty, RoundType, TIME_LIMITS } from '@/types/interview';
 
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
@@ -137,6 +137,7 @@ Return ONLY valid JSON in this exact format (no markdown, no explanation):
   try {
     const response = await callGemini(prompt);
     const parsed = parseJsonFromResponse(response);
+    const timeLimit = TIME_LIMITS[difficulty];
     
     return parsed.questions.map((q: any, index: number) => ({
       id: `q-${Date.now()}-${index}`,
@@ -144,6 +145,7 @@ Return ONLY valid JSON in this exact format (no markdown, no explanation):
       type: q.type || roundType,
       expectedTopics: q.expectedTopics || [],
       answerMode: q.answerMode || 'text',
+      timeLimit, // Add time limit based on difficulty
     }));
   } catch (error) {
     console.error('Error generating questions:', error);
