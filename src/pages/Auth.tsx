@@ -45,8 +45,9 @@ const Auth = () => {
     setIsLoading(false);
 
     if (result.success) {
+      alert("navigating dashboard")
       toast({ title: 'Welcome back!', description: 'You have successfully logged in' });
-      navigate('/dashboard');
+      navigate('/dashboard',{replace:true});
     } else {
       toast({ title: 'Login failed', description: result.error, variant: 'destructive' });
     }

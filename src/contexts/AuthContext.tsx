@@ -91,6 +91,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         'auth/weak-password': 'Password must be at least 6 characters',
         'auth/invalid-email': 'Invalid email address',
       };
+      console.error("Sign up ",error)
       return { success: false, error: errorMessages[error.code] || 'Signup failed' };
     }
   };

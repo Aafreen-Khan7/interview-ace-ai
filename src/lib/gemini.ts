@@ -1,7 +1,7 @@
 import { InterviewQuestion, JobRole, Difficulty, RoundType, TIME_LIMITS } from '@/types/interview';
 
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
-const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
+const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent';
 
 interface GeminiResponse {
   candidates: Array<{

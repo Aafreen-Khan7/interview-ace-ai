@@ -61,7 +61,7 @@ export function useInterview(): UseInterviewReturn {
         config.questionCount,
         config.resumeContent
       );
-      
+      alert(JSON.stringify(questions))
       // Save to Firebase
       const firestoreSession = await createInterviewSession(
         firebaseUser.uid,
@@ -89,7 +89,7 @@ export function useInterview(): UseInterviewReturn {
       setCurrentQuestionIndex(0);
     } catch (err) {
       console.error('Failed to start interview:', err);
-      setError('Failed to generate interview questions. Please try again.');
+      setError('Failed to generate interview questions. Please try again akshad.');
     } finally {
       setIsGenerating(false);
     }
