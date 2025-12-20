@@ -25,7 +25,7 @@ const Landing = () => {
           <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center">
             <Brain className="w-6 h-6 text-primary" />
           </div>
-          <span className="text-xl font-display font-bold">InterviewAI</span>
+          <span className="text-xl font-display font-bold">PrepBot</span>
         </div>
         <div className="flex items-center gap-4">
           <Link to="/auth">
