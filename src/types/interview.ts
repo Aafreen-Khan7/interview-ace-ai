@@ -64,6 +64,15 @@ export interface UserProfile {
   email: string;
   name: string;
   avatar?: string;
+  role?: string;
+  about?: string;
+  description?: string;
+  phone?: string;
+  location?: string;
+  linkedin?: string;
+  github?: string;
+  portfolio?: string;
+  skills?: string;
   totalInterviews: number;
   averageScore: number;
   streakDays: number;

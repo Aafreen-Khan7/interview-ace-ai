@@ -12,7 +12,8 @@ import {
   serverTimestamp,
   Timestamp,
 } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
+import { db, storage } from '@/lib/firebase';
 import { InterviewSession, UserProfile, JobRole, Difficulty, RoundType, InterviewQuestion, QuestionFeedback } from '@/types/interview';
 
 // User operations
@@ -253,4 +254,79 @@ export async function getUserAnalytics(userId: string): Promise<UserAnalytics> {
     rolePerformance,
     improvementAreas,
   };
+}
+
+// Photo operations
+export async function uploadProfilePhoto(userId: string, file: File): Promise<string> {
+  try {
+    console.log('Starting photo upload for user:', userId);
+    const fileName = `${Date.now()}-${file.name}`;
+    const storageRef = ref(storage, `profile-photos/${userId}/${fileName}`);
+    
+    console.log('Uploading file to storage:', file.name, 'Size:', file.size);
+    const uploadResult = await uploadBytes(storageRef, file);
+    console.log('File uploaded to storage successfully:', uploadResult.ref.fullPath);
+    
+    // Get the download URL
+    const downloadUrl = await getDownloadURL(uploadResult.ref);
+    console.log('Download URL obtained:', downloadUrl);
+    console.log('URL Length:', downloadUrl.length);
+    
+    // Update user profile with new avatar URL directly
+    const userRef = doc(db, 'users', userId);
+    console.log('Updating Firestore document:', userRef.path, 'with avatar URL');
+    console.log('Avatar URL to save:', downloadUrl);
+    
+    const updateData = { 
+      avatar: downloadUrl 
+    };
+    console.log('Update data:', updateData);
+    
+    await updateDoc(userRef, updateData);
+    console.log('✅ Firestore updated with avatar URL successfully');
+    
+    // Verify the update
+    const updatedDoc = await getDoc(userRef);
+    const savedAvatar = updatedDoc.data()?.avatar;
+    console.log('Verification - Current avatar in Firestore:', savedAvatar);
+    console.log('Avatar saved correctly:', savedAvatar === downloadUrl);
+    
+    return downloadUrl;
+  } catch (error) {
+    console.error('❌ Error uploading profile photo:', error);
+    if (error instanceof Error) {
+      console.error('Error message:', error.message);
+      console.error('Error code:', (error as any).code);
+    }
+    throw error;
+  }
+}
+
+export async function deleteProfilePhoto(userId: string): Promise<void> {
+  try {
+    const userRef = doc(db, 'users', userId);
+    const userDoc = await getDoc(userRef);
+    
+    if (userDoc.exists()) {
+      const avatarUrl = userDoc.data()?.avatar;
+      
+      // Delete from storage if URL exists
+      if (avatarUrl) {
+        try {
+          const photoRef = ref(storage, avatarUrl);
+          await deleteObject(photoRef);
+        } catch (error) {
+          console.warn('Error deleting file from storage:', error);
+        }
+      }
+      
+      // Update profile to remove avatar
+      await updateDoc(userRef, { 
+        avatar: '' // Use empty string instead of undefined
+      });
+    }
+  } catch (error) {
+    console.error('Error deleting profile photo:', error);
+    throw error;
+  }
 }
