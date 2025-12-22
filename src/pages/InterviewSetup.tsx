@@ -1,6 +1,8 @@
 import { useState, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
 import { Slider } from '@/components/ui/slider';
 import { useToast } from '@/hooks/use-toast';
@@ -28,6 +30,8 @@ const InterviewSetup = () => {
   const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty>('intermediate');
   const [selectedRoundType, setSelectedRoundType] = useState<RoundType>('mixed');
   const [questionCount, setQuestionCount] = useState(5);
+  const [proctorEnabled, setProctorEnabled] = useState(false);
+  const [cameraAllowed, setCameraAllowed] = useState(false);
   
   // Resume state
   const [resumeFile, setResumeFile] = useState<File | null>(null);
@@ -105,9 +109,32 @@ const InterviewSetup = () => {
       roundType: selectedRoundType,
       questionCount,
       resumeContent: resumeContent || undefined,
+      proctorEnabled,
     };
     
     navigate('/interview', { state: { config } });
+  };
+
+  const handleProctorToggle = async (enabled: boolean) => {
+    setProctorEnabled(enabled);
+    if (!enabled) {
+      setCameraAllowed(false);
+      return;
+    }
+
+    // Request camera permission proactively so Start can be enabled only when granted
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      // stop immediately, we only wanted permission
+      stream.getTracks().forEach((t) => t.stop());
+      setCameraAllowed(true);
+      toast({ title: 'Camera permission granted', description: 'Proctoring enabled' });
+    } catch (err) {
+      console.error('Camera permission denied', err);
+      setCameraAllowed(false);
+      setProctorEnabled(false);
+      toast({ title: 'Camera permission required', description: 'Enable camera to use proctoring', variant: 'destructive' });
+    }
   };
 
   const canProceed = () => {
@@ -348,6 +375,26 @@ const InterviewSetup = () => {
                     <span className="text-muted-foreground">Questions</span>
                     <span className="font-medium">{questionCount}</span>
                   </div>
+                  <div className="flex items-center justify-between py-2 border-b border-border/50">
+                    <span className="text-muted-foreground">Proctoring</span>
+                    <span className="font-medium flex items-center gap-2">
+                      <Label className="flex items-center gap-2">
+                        <Checkbox checked={proctorEnabled} onCheckedChange={(v) => handleProctorToggle(Boolean(v))} />
+                        <span className="text-sm">Require camera proctoring</span>
+                      </Label>
+                      <div className="text-xs text-muted-foreground mt-1">
+                        {proctorEnabled ? (
+                          cameraAllowed ? (
+                            <span className="text-success">Camera permission granted</span>
+                          ) : (
+                            <span className="text-warning">Camera permission required</span>
+                          )
+                        ) : (
+                          <span className="text-muted-foreground">Optional</span>
+                        )}
+                      </div>
+                    </span>
+                  </div>
                   <div className="flex justify-between py-2">
                     <span className="text-muted-foreground">Resume</span>
                     <span className="font-medium flex items-center gap-2">
@@ -392,6 +439,8 @@ const InterviewSetup = () => {
             <Button 
               onClick={handleStart}
               className="bg-primary text-primary-foreground hover:bg-primary/90 glow-effect"
+              disabled={isParsingResume || (proctorEnabled && !cameraAllowed)}
+              title={proctorEnabled && !cameraAllowed ? 'Enable camera permission to start proctored interview' : undefined}
             >
               Start Interview
               <ArrowRight className="w-4 h-4 ml-2" />
