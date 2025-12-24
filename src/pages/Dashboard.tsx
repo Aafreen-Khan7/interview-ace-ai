@@ -79,7 +79,7 @@ const Dashboard = () => {
             <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center">
               <Brain className="w-5 h-5 text-primary" />
             </div>
-            <span className="text-lg font-display font-bold">InterviewAI</span>
+            <span className="text-lg font-display font-bold">PrepBot</span>
           </Link>
           <div className="flex items-center gap-4">
             <Link to="/setup">
@@ -129,7 +129,7 @@ const Dashboard = () => {
 
       <main className="relative z-10 max-w-7xl mx-auto p-6">
         <div className="mb-8">
-          <h1 className="text-3xl font-display font-bold mb-2">Welcome back, {user?.name?.split(' ')[0]}!</h1>
+          <h1 className="text-3xl font-display font-bold mb-2">Welcome back, {user?.email?.split(' ')[0]} !</h1>
           <p className="text-muted-foreground">Track your progress and continue improving.</p>
         </div>
 
