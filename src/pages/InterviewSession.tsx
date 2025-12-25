@@ -20,7 +20,10 @@ import {
   TrendingDown
 } from 'lucide-react';
 import { useInterview } from '@/hooks/useInterview';
-import { InterviewTimer, useQuestionTimer } from '@/components/InterviewTimer';
+import { InterviewTimer } from '@/components/InterviewTimer';
+import ProctoringOverlay from '@/components/ProctoringOverlay';
+import useProctor from '@/hooks/useProctor';
+import useProctorStore from '@/store/useProctorStore';
 import { QuestionFeedback } from '@/types/interview';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
@@ -55,14 +58,77 @@ const InterviewSession = () => {
   
   const videoRef = useRef<HTMLVideoElement>(null);
   const mediaStreamRef = useRef<MediaStream | null>(null);
+  const [mediaStream, setMediaStream] = useState<MediaStream | null>(null);
+  const startProctor = useProctorStore((s) => s.start);
+  const stopProctor = useProctorStore((s) => s.stop);
+
+  // Callback ref to ensure video element gets the stream immediately when mounted
+  const setVideoRef = useCallback((element: HTMLVideoElement | null) => {
+    videoRef.current = element;
+    if (element && mediaStreamRef.current) {
+      element.srcObject = mediaStreamRef.current;
+    }
+  }, []);
 
   useEffect(() => {
     if (!config) {
       navigate('/setup');
       return;
     }
-    startInterview(config);
-  }, [config, navigate, startInterview]);
+
+    const init = async () => {
+      if (config.proctorEnabled) {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+          mediaStreamRef.current = stream;
+          setMediaStream(stream);
+          if (videoRef.current) videoRef.current.srcObject = stream;
+          setCameraEnabled(true);
+          startProctor();
+
+          // wait for proctor init (ready or error) with timeout
+          const start = Date.now();
+          const timeout = 10000; // ms
+          while (true) {
+            const st = useProctorStore.getState().status;
+            if (st === 'ready') break;
+            if (st === 'error') {
+              toast.error('Proctoring failed to initialize. Please check your browser or model files.');
+              // stop proctor and return to setup
+              stopProctor();
+              navigate('/setup');
+              return;
+            }
+            if (Date.now() - start > timeout) {
+              toast.error('Proctoring initialization timed out. Please try again.');
+              stopProctor();
+              navigate('/setup');
+              return;
+            }
+            // small delay
+            // eslint-disable-next-line no-await-in-loop
+            await new Promise((r) => setTimeout(r, 200));
+          }
+        } catch (err) {
+          console.error('Camera permission required for proctoring', err);
+          toast.error('Camera permission is required for proctoring. Please enable it to continue.');
+          navigate('/setup');
+          return;
+        }
+      }
+
+      startInterview(config);
+    };
+
+    init();
+  }, [config, navigate, startInterview, startProctor]);
+
+  // Ensure video stream is attached when camera is enabled
+  useEffect(() => {
+    if (cameraEnabled && videoRef.current && mediaStreamRef.current) {
+      videoRef.current.srcObject = mediaStreamRef.current;
+    }
+  }, [cameraEnabled]);
 
   // Start timer when question loads
   useEffect(() => {
@@ -73,8 +139,14 @@ const InterviewSession = () => {
   }, [session, currentQuestion, showFeedback, currentQuestionIndex]);
 
   const toggleCamera = useCallback(async () => {
+    // If proctoring is required, prevent turning off camera
     if (cameraEnabled) {
+      if (config?.proctorEnabled) {
+        toast.warning('Camera must remain enabled for proctored interviews.');
+        return;
+      }
       mediaStreamRef.current?.getTracks().forEach(track => track.stop());
+      stopProctor();
       setCameraEnabled(false);
     } else {
       try {
@@ -88,7 +160,7 @@ const InterviewSession = () => {
         console.error('Camera access denied:', err);
       }
     }
-  }, [cameraEnabled]);
+  }, [cameraEnabled, config, stopProctor]);
 
   const handleTimeUp = useCallback(() => {
     toast.warning("Time's up! Submitting your current answer...");
@@ -103,6 +175,13 @@ const InterviewSession = () => {
   const handleTimeUpdate = useCallback((elapsed: number) => {
     setElapsedTime(elapsed);
   }, []);
+
+  // Initialize proctoring hook (reads store.enabled internally)
+  const handleProctorWarning = useCallback((type: string, message?: string) => {
+    if (message) toast.warning(message);
+  }, []);
+
+  useProctor({ videoRef, onWarning: handleProctorWarning });
 
   const handleSubmitAnswer = async () => {
     if (isLoading) return;
@@ -190,6 +269,9 @@ const InterviewSession = () => {
       </header>
 
       <main className="relative z-10 max-w-6xl mx-auto p-6">
+        {config?.proctorEnabled && (
+          <ProctoringOverlay enabledByDefault={true} videoRef={videoRef} cameraEnabled={cameraEnabled} stream={mediaStream} />
+        )}
         <div className="grid lg:grid-cols-3 gap-6">
           {/* Camera Preview */}
           <div className="lg:col-span-1 order-2 lg:order-1">
@@ -198,7 +280,7 @@ const InterviewSession = () => {
                 <div className="aspect-[4/3] bg-secondary relative">
                   {cameraEnabled ? (
                     <video 
-                      ref={videoRef}
+                      ref={setVideoRef}
                       autoPlay 
                       muted 
                       playsInline

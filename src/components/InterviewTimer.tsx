@@ -27,23 +27,24 @@ export function InterviewTimer({
   
   useEffect(() => {
     if (!isActive) return;
-    
     const interval = setInterval(() => {
-      setElapsed(prev => {
-        const newElapsed = prev + 1;
-        onTimeUpdate(newElapsed);
-        
-        if (newElapsed >= timeLimit) {
-          onTimeUp();
-          clearInterval(interval);
-        }
-        
-        return newElapsed;
-      });
+      setElapsed(prev => prev + 1);
     }, 1000);
-    
+
     return () => clearInterval(interval);
   }, [isActive, timeLimit, onTimeUp, onTimeUpdate]);
+
+  // Notify parent about elapsed/time-up from a separate effect (avoids setState-in-render)
+  useEffect(() => {
+    // Only notify when timer is active
+    if (!isActive) return;
+
+    onTimeUpdate(elapsed);
+    if (elapsed >= timeLimit) {
+      onTimeUp();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [elapsed]);
   
   // Reset when question changes
   const reset = useCallback(() => {
