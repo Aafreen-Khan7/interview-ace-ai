@@ -129,7 +129,7 @@ const Dashboard = () => {
 
       <main className="relative z-10 max-w-7xl mx-auto p-6">
         <div className="mb-8">
-          <h1 className="text-3xl font-display font-bold mb-2">Welcome back, {user?.email?.split(' ')[0]} !</h1>
+          <h1 className="text-3xl font-display font-bold mb-2">Welcome back, {user?.name || 'U'} </h1>
           <p className="text-muted-foreground">Track your progress and continue improving.</p>
         </div>
 
