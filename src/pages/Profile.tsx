@@ -20,19 +20,20 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { 
-  Brain, 
-  ArrowLeft, 
-  Loader2, 
-  Camera, 
-  Trash2, 
-  User, 
-  Mail, 
-  Phone, 
-  MapPin, 
-  Linkedin, 
-  Github, 
-  Globe, 
+import { ThemeToggle } from '@/components/ThemeToggle';
+import {
+  Brain,
+  ArrowLeft,
+  Loader2,
+  Camera,
+  Trash2,
+  User,
+  Mail,
+  Phone,
+  MapPin,
+  Linkedin,
+  Github,
+  Globe,
   Briefcase,
   Award,
   Code,
@@ -234,15 +235,15 @@ const Profile = () => {
   const displayName = formData.name.split(' ')[0] || 'U';
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 transition-colors duration-500">
       {/* Animated Background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-64 h-64 bg-blue-200/20 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-200/10 rounded-full blur-3xl"></div>
+        <div className="absolute top-20 left-10 w-64 h-64 bg-blue-200/20 dark:bg-blue-900/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-200/10 dark:bg-purple-900/5 rounded-full blur-3xl"></div>
       </div>
 
       {/* Navigation */}
-      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-200/50">
+      <nav className="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-800/50">
         <div className="px-8 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
@@ -250,28 +251,28 @@ const Profile = () => {
                 <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
                   <Brain className="h-6 w-6 text-white" />
                 </div>
-                <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
-                  InterviewAce.AI
+                <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400">
+                  InterviewAceAI
                 </span>
               </Link>
               <div className="hidden md:flex items-center space-x-6 ml-8">
-                <Link to="/dashboard" className="text-gray-600 hover:text-blue-600 font-medium">
+                <Link to="/dashboard" className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors">
                   Dashboard
                 </Link>
-                <Link to="/setup" className="text-gray-600 hover:text-blue-600 font-medium">
+                <Link to="/setup" className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors">
                   Interviews
                 </Link>
-                <Link to="/results" className="text-gray-600 hover:text-blue-600 font-medium">
+                <Link to="/results" className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors">
                   Results
                 </Link>
-                <Link to="/profile" className="text-blue-600 font-bold flex items-center">
+                <Link to="/profile" className="text-blue-600 dark:text-blue-400 font-bold flex items-center">
                   <User className="h-5 w-5 mr-2" />
                   Profile
                 </Link>
               </div>
             </div>
             <Link to="/dashboard">
-              <Button variant="outline" className="border-gray-300 hover:border-blue-500 hover:bg-blue-50 text-gray-700">
+              <Button variant="outline" className="border-gray-300 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 text-gray-700 dark:text-gray-300 transition-all">
                 <ArrowLeft className="h-5 w-5 mr-2" />
                 Back to Dashboard
               </Button>
@@ -284,41 +285,41 @@ const Profile = () => {
         {/* Header */}
         <div className="flex items-center justify-between mb-12">
           <div>
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">
-              Profile <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">Settings</span>
+            <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
+              Profile <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400">Settings</span>
             </h1>
-            <p className="text-gray-600">Manage your account information and preferences</p>
+            <p className="text-gray-600 dark:text-gray-400">Manage your account information and preferences</p>
           </div>
-          <div className="flex items-center space-x-4">
-            <Button variant="outline" className="border-gray-300 text-gray-700">
-              <Settings className="h-5 w-5 mr-2" />
-              Settings
-            </Button>
-          </div>
+            <div className="flex items-center space-x-4">
+              <Button variant="outline" className="border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                <Settings className="h-5 w-5 mr-2" />
+                Settings
+              </Button>
+            </div>
         </div>
 
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Left Column - Profile Photo & Summary */}
           <div className="space-y-8">
             {/* Profile Photo Card */}
-            <Card className="bg-white border border-gray-200 shadow-sm rounded-2xl">
-              <CardHeader className="pb-4 border-b border-gray-100">
-                <CardTitle className="flex items-center text-xl">
-                  <User className="h-6 w-6 mr-3 text-blue-600" />
+            <Card className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-sm rounded-2xl overflow-hidden transition-all duration-300">
+              <CardHeader className="pb-4 border-b border-gray-100 dark:border-gray-800">
+                <CardTitle className="flex items-center text-xl text-gray-900 dark:text-gray-100">
+                  <User className="h-6 w-6 mr-3 text-blue-600 dark:text-blue-400" />
                   Profile Photo
                 </CardTitle>
               </CardHeader>
               <CardContent className="pt-8">
                 <div className="flex flex-col items-center">
                   <div className="relative mb-8">
-                    <Avatar className="h-40 w-40 border-4 border-white shadow-xl">
+                    <Avatar className="h-40 w-40 border-4 border-white dark:border-gray-800 shadow-xl">
                       <AvatarImage src={displayAvatar} alt={formData.name} className="object-cover" />
                       <AvatarFallback className="bg-gradient-to-r from-blue-500 to-purple-600 text-white text-4xl font-bold">
                         {displayName.toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
                     {tempPhotoPreview && (
-                      <div className="absolute -bottom-2 -right-2 w-12 h-12 bg-green-500 rounded-full border-4 border-white flex items-center justify-center shadow-lg">
+                      <div className="absolute -bottom-2 -right-2 w-12 h-12 bg-green-500 rounded-full border-4 border-white dark:border-gray-800 flex items-center justify-center shadow-lg">
                         <CheckCircle2 className="h-6 w-6 text-white" />
                       </div>
                     )}
@@ -337,13 +338,13 @@ const Profile = () => {
                           />
                           <Button 
                             variant="outline" 
-                            className="w-full border-2 border-dashed border-gray-300 hover:border-blue-500 hover:bg-blue-50 text-gray-700 py-6"
+                            className="w-full border-2 border-dashed border-gray-300 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 text-gray-700 dark:text-gray-300 py-6 transition-all"
                           >
                             <Camera className="h-5 w-5 mr-3" />
                             {profile?.avatar && profile.avatar.trim() ? 'Change Photo' : 'Upload Photo'}
                           </Button>
                         </label>
-                        <p className="text-sm text-center text-gray-500">
+                        <p className="text-sm text-center text-gray-500 dark:text-gray-400">
                           JPG, PNG, or GIF • Max 5MB
                         </p>
                       </div>
@@ -353,7 +354,7 @@ const Profile = () => {
                           variant="ghost"
                           onClick={() => setShowDeleteConfirm(true)}
                           disabled={isUploadingPhoto}
-                          className="w-full text-red-600 hover:text-red-700 hover:bg-red-50"
+                          className="w-full text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
                         >
                           <Trash2 className="h-5 w-5 mr-2" />
                           Delete Current Photo
@@ -363,14 +364,14 @@ const Profile = () => {
                   ) : (
                     <div className="space-y-4 w-full">
                       <div className="text-center mb-4">
-                        <p className="font-bold text-gray-900 mb-2">Preview</p>
-                        <p className="text-sm text-gray-600">Ready to upload your new profile photo</p>
+                        <p className="font-bold text-gray-900 dark:text-gray-100 mb-2">Preview</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">Ready to upload your new profile photo</p>
                       </div>
                       <div className="flex space-x-3">
                         <Button
                           onClick={handleUploadPhoto}
                           disabled={isUploadingPhoto}
-                          className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white"
+                          className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg shadow-blue-500/20"
                         >
                           {isUploadingPhoto ? (
                             <Loader2 className="h-5 w-5 mr-3 animate-spin" />
@@ -386,7 +387,7 @@ const Profile = () => {
                             setTempPhotoPreview(null);
                           }}
                           disabled={isUploadingPhoto}
-                          className="flex-1 border-gray-300 text-gray-700"
+                          className="flex-1 border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
                         >
                           <X className="h-5 w-5 mr-2" />
                           Cancel
@@ -399,28 +400,28 @@ const Profile = () => {
             </Card>
 
             {/* Account Summary */}
-            <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-2xl">
+            <Card className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border border-blue-200 dark:border-blue-800/50 rounded-2xl overflow-hidden">
               <CardContent className="p-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-6 flex items-center">
-                  <Shield className="h-6 w-6 mr-3 text-blue-600" />
+                <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-6 flex items-center">
+                  <Shield className="h-6 w-6 mr-3 text-blue-600 dark:text-blue-400" />
                   Account Summary
                 </h3>
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between p-3 bg-white/80 rounded-lg">
-                    <span className="text-gray-700">Member Since</span>
-                    <span className="font-bold text-gray-900">2024</span>
+                  <div className="flex items-center justify-between p-3 bg-white/80 dark:bg-gray-800/50 rounded-lg">
+                    <span className="text-gray-700 dark:text-gray-400">Member Since</span>
+                    <span className="font-bold text-gray-900 dark:text-gray-100">2024</span>
                   </div>
-                  <div className="flex items-center justify-between p-3 bg-white/80 rounded-lg">
-                    <span className="text-gray-700">Interviews</span>
-                    <span className="font-bold text-gray-900">12</span>
+                  <div className="flex items-center justify-between p-3 bg-white/80 dark:bg-gray-800/50 rounded-lg">
+                    <span className="text-gray-700 dark:text-gray-400">Interviews</span>
+                    <span className="font-bold text-gray-900 dark:text-gray-100">12</span>
                   </div>
-                  <div className="flex items-center justify-between p-3 bg-white/80 rounded-lg">
-                    <span className="text-gray-700">Average Score</span>
-                    <span className="font-bold text-gray-900">87%</span>
+                  <div className="flex items-center justify-between p-3 bg-white/80 dark:bg-gray-800/50 rounded-lg">
+                    <span className="text-gray-700 dark:text-gray-400">Average Score</span>
+                    <span className="font-bold text-gray-900 dark:text-gray-100">87%</span>
                   </div>
-                  <div className="flex items-center justify-between p-3 bg-white/80 rounded-lg">
-                    <span className="text-gray-700">Completion</span>
-                    <span className="font-bold text-gray-900">95%</span>
+                  <div className="flex items-center justify-between p-3 bg-white/80 dark:bg-gray-800/50 rounded-lg">
+                    <span className="text-gray-700 dark:text-gray-400">Completion</span>
+                    <span className="font-bold text-gray-900 dark:text-gray-100">95%</span>
                   </div>
                 </div>
               </CardContent>
@@ -429,14 +430,14 @@ const Profile = () => {
 
           {/* Right Column - Profile Information */}
           <div className="lg:col-span-2">
-            <Card className="bg-white border border-gray-200 shadow-sm rounded-2xl">
-              <CardHeader className="pb-4 border-b border-gray-100">
+            <Card className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-sm rounded-2xl overflow-hidden transition-all duration-300">
+              <CardHeader className="pb-4 border-b border-gray-100 dark:border-gray-800">
                 <div className="flex items-center justify-between">
-                  <CardTitle className="flex items-center text-2xl">
-                    <Edit2 className="h-7 w-7 mr-3 text-blue-600" />
+                  <CardTitle className="flex items-center text-2xl text-gray-900 dark:text-gray-100">
+                    <Edit2 className="h-7 w-7 mr-3 text-blue-600 dark:text-blue-400" />
                     Edit Profile Information
                   </CardTitle>
-                  <div className="flex items-center text-sm text-gray-500">
+                  <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
                     <Star className="h-4 w-4 mr-1 text-amber-500" />
                     <span>All fields are optional</span>
                   </div>
@@ -446,31 +447,31 @@ const Profile = () => {
                 <div className="grid md:grid-cols-2 gap-6">
                   {/* Name */}
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-900 flex items-center">
-                      <User className="h-4 w-4 mr-2 text-gray-500" />
+                    <label className="text-sm font-medium text-gray-900 dark:text-gray-200 flex items-center">
+                      <User className="h-4 w-4 mr-2 text-gray-500 dark:text-gray-400" />
                       Full Name
                     </label>
                     <Input
                       value={formData.name}
                       onChange={(e) => handleInputChange('name', e.target.value)}
                       placeholder="John Doe"
-                      className="bg-gray-50 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                      className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 focus:border-blue-500 focus:ring-blue-500"
                     />
                   </div>
 
                   {/* Role/Experience Level */}
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-900 flex items-center">
-                      <Briefcase className="h-4 w-4 mr-2 text-gray-500" />
+                    <label className="text-sm font-medium text-gray-900 dark:text-gray-200 flex items-center">
+                      <Briefcase className="h-4 w-4 mr-2 text-gray-500 dark:text-gray-400" />
                       Experience Level
                     </label>
                     <Select value={formData.role} onValueChange={(value) => handleInputChange('role', value)}>
-                      <SelectTrigger className="bg-gray-50 border-gray-300 focus:ring-blue-500">
+                      <SelectTrigger className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 focus:ring-blue-500">
                         <SelectValue placeholder="Select experience level" />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="dark:bg-gray-900 dark:border-gray-800">
                         {EXPERIENCE_LEVELS.map((level) => (
-                          <SelectItem key={level} value={level}>
+                          <SelectItem key={level} value={level} className="dark:text-gray-200 dark:focus:bg-gray-800">
                             {level}
                           </SelectItem>
                         ))}
@@ -480,58 +481,58 @@ const Profile = () => {
 
                   {/* Skills */}
                   <div className="md:col-span-2 space-y-2">
-                    <label className="text-sm font-medium text-gray-900 flex items-center">
-                      <Code className="h-4 w-4 mr-2 text-gray-500" />
+                    <label className="text-sm font-medium text-gray-900 dark:text-gray-200 flex items-center">
+                      <Code className="h-4 w-4 mr-2 text-gray-500 dark:text-gray-400" />
                       Skills
                     </label>
                     <Input
                       value={formData.skills}
                       onChange={(e) => handleInputChange('skills', e.target.value)}
                       placeholder="JavaScript, React, Python, Node.js, AWS, Docker..."
-                      className="bg-gray-50 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                      className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 focus:border-blue-500 focus:ring-blue-500"
                     />
                   </div>
 
                   {/* About */}
                   <div className="md:col-span-2 space-y-2">
-                    <label className="text-sm font-medium text-gray-900 flex items-center">
-                      <Award className="h-4 w-4 mr-2 text-gray-500" />
+                    <label className="text-sm font-medium text-gray-900 dark:text-gray-200 flex items-center">
+                      <Award className="h-4 w-4 mr-2 text-gray-500 dark:text-gray-400" />
                       Professional Summary
                     </label>
                     <Textarea
                       value={formData.about}
                       onChange={(e) => handleInputChange('about', e.target.value)}
                       placeholder="Briefly describe your professional background and career objectives..."
-                      className="bg-gray-50 border-gray-300 focus:border-blue-500 focus:ring-blue-500 min-h-32 resize-none"
+                      className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 focus:border-blue-500 focus:ring-blue-500 min-h-32 resize-none"
                     />
                   </div>
 
                   {/* Description */}
                   <div className="md:col-span-2 space-y-2">
-                    <label className="text-sm font-medium text-gray-900 flex items-center">
-                      <Target className="h-4 w-4 mr-2 text-gray-500" />
+                    <label className="text-sm font-medium text-gray-900 dark:text-gray-200 flex items-center">
+                      <Target className="h-4 w-4 mr-2 text-gray-500 dark:text-gray-400" />
                       Personal Description
                     </label>
                     <Textarea
                       value={formData.description}
                       onChange={(e) => handleInputChange('description', e.target.value)}
                       placeholder="Tell us about your interests, passions, and what drives you..."
-                      className="bg-gray-50 border-gray-300 focus:border-blue-500 focus:ring-blue-500 min-h-32 resize-none"
+                      className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 focus:border-blue-500 focus:ring-blue-500 min-h-32 resize-none"
                     />
                   </div>
 
                   {/* Contact Information Section */}
                   <div className="md:col-span-2">
-                    <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center">
-                      <Mail className="h-5 w-5 mr-2 text-blue-600" />
+                    <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4 flex items-center mt-6">
+                      <Mail className="h-5 w-5 mr-2 text-blue-600 dark:text-blue-400" />
                       Contact Information
                     </h3>
                   </div>
 
                   {/* Phone */}
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-900 flex items-center">
-                      <Phone className="h-4 w-4 mr-2 text-gray-500" />
+                    <label className="text-sm font-medium text-gray-900 dark:text-gray-200 flex items-center">
+                      <Phone className="h-4 w-4 mr-2 text-gray-500 dark:text-gray-400" />
                       Phone Number
                     </label>
                     <Input
@@ -539,35 +540,35 @@ const Profile = () => {
                       onChange={(e) => handleInputChange('phone', e.target.value)}
                       placeholder="+1 (555) 123-4567"
                       type="tel"
-                      className="bg-gray-50 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                      className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 focus:border-blue-500 focus:ring-blue-500"
                     />
                   </div>
 
                   {/* Location */}
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-900 flex items-center">
-                      <MapPin className="h-4 w-4 mr-2 text-gray-500" />
+                    <label className="text-sm font-medium text-gray-900 dark:text-gray-200 flex items-center">
+                      <MapPin className="h-4 w-4 mr-2 text-gray-500 dark:text-gray-400" />
                       Location / City
                     </label>
                     <Input
                       value={formData.location}
                       onChange={(e) => handleInputChange('location', e.target.value)}
                       placeholder="San Francisco, CA"
-                      className="bg-gray-50 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                      className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 focus:border-blue-500 focus:ring-blue-500"
                     />
                   </div>
 
                   {/* Social Links Section */}
                   <div className="md:col-span-2">
-                    <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center">
-                      <Globe className="h-5 w-5 mr-2 text-blue-600" />
+                    <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4 flex items-center mt-6">
+                      <Globe className="h-5 w-5 mr-2 text-blue-600 dark:text-blue-400" />
                       Social Links
                     </h3>
                   </div>
 
                   {/* LinkedIn */}
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-900 flex items-center">
+                    <label className="text-sm font-medium text-gray-900 dark:text-gray-200 flex items-center">
                       <Linkedin className="h-4 w-4 mr-2 text-blue-600" />
                       LinkedIn
                     </label>
@@ -576,14 +577,14 @@ const Profile = () => {
                       onChange={(e) => handleInputChange('linkedin', e.target.value)}
                       placeholder="linkedin.com/in/username"
                       type="url"
-                      className="bg-gray-50 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                      className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 focus:border-blue-500 focus:ring-blue-500"
                     />
                   </div>
 
                   {/* GitHub */}
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-900 flex items-center">
-                      <Github className="h-4 w-4 mr-2 text-gray-800" />
+                    <label className="text-sm font-medium text-gray-900 dark:text-gray-200 flex items-center">
+                      <Github className="h-4 w-4 mr-2 text-gray-800 dark:text-gray-200" />
                       GitHub
                     </label>
                     <Input
@@ -591,13 +592,13 @@ const Profile = () => {
                       onChange={(e) => handleInputChange('github', e.target.value)}
                       placeholder="github.com/username"
                       type="url"
-                      className="bg-gray-50 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                      className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 focus:border-blue-500 focus:ring-blue-500"
                     />
                   </div>
 
                   {/* Portfolio */}
                   <div className="md:col-span-2 space-y-2">
-                    <label className="text-sm font-medium text-gray-900 flex items-center">
+                    <label className="text-sm font-medium text-gray-900 dark:text-gray-200 flex items-center">
                       <Globe className="h-4 w-4 mr-2 text-purple-600" />
                       Portfolio / Website
                     </label>
@@ -606,13 +607,13 @@ const Profile = () => {
                       onChange={(e) => handleInputChange('portfolio', e.target.value)}
                       placeholder="https://yourportfolio.com"
                       type="url"
-                      className="bg-gray-50 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                      className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 focus:border-blue-500 focus:ring-blue-500"
                     />
                   </div>
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex flex-col sm:flex-row gap-4 mt-12 pt-8 border-t border-gray-100">
+                <div className="flex flex-col sm:flex-row gap-4 mt-12 pt-8 border-t border-gray-100 dark:border-gray-800">
                   <Button
                     onClick={handleSave}
                     disabled={isSaving}
@@ -629,7 +630,7 @@ const Profile = () => {
                     variant="outline"
                     onClick={() => loadProfile()}
                     disabled={isSaving}
-                    className="flex-1 border-gray-300 hover:border-gray-400 text-gray-700 py-6 text-lg rounded-xl"
+                    className="flex-1 border-gray-300 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-600 text-gray-700 dark:text-gray-300 py-6 text-lg rounded-xl"
                   >
                     <X className="h-5 w-5 mr-3" />
                     Discard Changes
@@ -643,20 +644,20 @@ const Profile = () => {
 
       {/* Delete Confirmation Dialog */}
       <AlertDialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
-        <AlertDialogContent className="bg-white border border-gray-200 rounded-2xl">
+        <AlertDialogContent className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl">
           <div className="p-2">
-            <div className="w-16 h-16 bg-gradient-to-br from-red-100 to-red-200 rounded-2xl flex items-center justify-center mx-auto mb-6">
-              <Trash2 className="h-8 w-8 text-red-600" />
+            <div className="w-16 h-16 bg-gradient-to-br from-red-100 to-red-200 dark:from-red-900/40 dark:to-red-800/40 rounded-2xl flex items-center justify-center mx-auto mb-6">
+              <Trash2 className="h-8 w-8 text-red-600 dark:text-red-400" />
             </div>
-            <AlertDialogTitle className="text-2xl font-bold text-center text-gray-900">
+            <AlertDialogTitle className="text-2xl font-bold text-center text-gray-900 dark:text-white">
               Delete Profile Photo?
             </AlertDialogTitle>
-            <AlertDialogDescription className="text-center text-gray-600 mt-4">
+            <AlertDialogDescription className="text-center text-gray-600 dark:text-gray-400 mt-4">
               Are you sure you want to delete your profile photo? 
               This action cannot be undone.
             </AlertDialogDescription>
             <div className="flex gap-4 justify-center mt-8">
-              <AlertDialogCancel className="border-gray-300 hover:bg-gray-100 text-gray-700 px-8 py-3 rounded-xl">
+              <AlertDialogCancel className="border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 px-8 py-3 rounded-xl transition-colors">
                 Cancel
               </AlertDialogCancel>
               <AlertDialogAction 
@@ -669,6 +670,11 @@ const Profile = () => {
           </div>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Theme Toggle in bottom left corner */}
+      <div className="fixed bottom-6 left-6 z-50">
+        <ThemeToggle />
+      </div>
     </div>
   );
 };

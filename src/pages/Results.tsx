@@ -2,11 +2,12 @@ import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { 
-  Brain, 
-  Trophy, 
-  Target, 
-  TrendingUp, 
+
+import {
+  Brain,
+  Trophy,
+  Target,
+  TrendingUp,
   RotateCcw,
   Home,
   CheckCircle2,
@@ -34,6 +35,7 @@ import {
 } from 'lucide-react';
 import { InterviewSession } from '@/types/interview';
 import { RadarChart, PolarGrid, PolarAngleAxis, Radar, ResponsiveContainer } from 'recharts';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 const Results = () => {
   const location = useLocation();
@@ -98,16 +100,16 @@ const Results = () => {
   const allImprovements = [...new Set(session.feedback.flatMap(f => f.improvements))].slice(0, 4);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 dark:from-slate-950 dark:to-slate-900">
       {/* Animated Background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-64 h-64 bg-blue-200/20 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-200/10 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-to-br from-transparent via-blue-50/5 to-transparent"></div>
+        <div className="absolute top-20 left-10 w-64 h-64 bg-blue-200/20 dark:bg-blue-900/30 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-200/10 dark:bg-purple-900/20 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-to-br from-transparent via-blue-50/5 dark:via-blue-950/5 to-transparent"></div>
       </div>
 
       {/* Navigation */}
-      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-200/50">
+      <nav className="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-gray-200/50 dark:border-slate-700/50">
         <div className="px-8 py-4">
           <div className="flex items-center justify-between">
             <Link to="/" className="flex items-center space-x-3">
@@ -115,15 +117,15 @@ const Results = () => {
                 <Brain className="h-6 w-6 text-white" />
               </div>
               <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
-                InterviewAce.AI
+                InterviewAceAI
               </span>
             </Link>
             <div className="flex items-center space-x-4">
-              <Button variant="outline" className="border-gray-300 text-gray-700">
+              <Button variant="outline" className="border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800">
                 <Share2 className="h-5 w-5 mr-2" />
                 Share Results
               </Button>
-              <Button variant="outline" className="border-gray-300 text-gray-700">
+              <Button variant="outline" className="border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800">
                 <Download className="h-5 w-5 mr-2" />
                 Export PDF
               </Button>
@@ -137,15 +139,15 @@ const Results = () => {
         <div className="text-center mb-16">
           <div className="inline-flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-blue-500/20 to-purple-500/20 backdrop-blur-sm rounded-full border border-blue-500/30 mb-8">
             <Sparkles className="h-5 w-5 text-blue-400" />
-            <span className="text-sm font-medium text-blue-700">Interview Analysis Complete</span>
+            <span className="text-sm font-medium text-blue-700 dark:text-blue-300">Interview Analysis Complete</span>
             <Sparkles className="h-5 w-5 text-purple-400" />
           </div>
           
-          <h1 className="text-5xl md:text-7xl font-bold mb-6">
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 dark:text-white">
             {getScoreLabel(session.totalScore)}
           </h1>
           
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-12">
+          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-12">
             {getScoreSubLabel(session.totalScore)} Here's your detailed performance breakdown.
           </p>
 
@@ -167,43 +169,43 @@ const Results = () => {
 
           {/* Session Details */}
           <div className="flex flex-wrap items-center justify-center gap-6 mb-12">
-            <div className="flex items-center space-x-3 bg-white px-6 py-3 rounded-xl border border-gray-200 shadow-sm">
+            <div className="flex items-center space-x-3 bg-white dark:bg-slate-800 px-6 py-3 rounded-xl border border-gray-200 dark:border-slate-700 shadow-sm">
               <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
                 <Users className="h-5 w-5 text-white" />
               </div>
               <div>
-                <div className="text-sm text-gray-500">Role</div>
-                <div className="font-bold text-gray-900 capitalize">{session.jobRole.replace(/-/g, ' ')}</div>
+                <div className="text-sm text-gray-500 dark:text-gray-400">Role</div>
+                <div className="font-bold text-gray-900 dark:text-white capitalize">{session.jobRole.replace(/-/g, ' ')}</div>
               </div>
             </div>
             
-            <div className="flex items-center space-x-3 bg-white px-6 py-3 rounded-xl border border-gray-200 shadow-sm">
+            <div className="flex items-center space-x-3 bg-white dark:bg-slate-800 px-6 py-3 rounded-xl border border-gray-200 dark:border-slate-700 shadow-sm">
               <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg flex items-center justify-center">
                 <Zap className="h-5 w-5 text-white" />
               </div>
               <div>
-                <div className="text-sm text-gray-500">Difficulty</div>
-                <div className="font-bold text-gray-900 capitalize">{session.difficulty?.toString() || 'Not Set'}</div>
+                <div className="text-sm text-gray-500 dark:text-gray-400">Difficulty</div>
+                <div className="font-bold text-gray-900 dark:text-white capitalize">{session.difficulty?.toString() || 'Not Set'}</div>
               </div>
             </div>
             
-            <div className="flex items-center space-x-3 bg-white px-6 py-3 rounded-xl border border-gray-200 shadow-sm">
+            <div className="flex items-center space-x-3 bg-white dark:bg-slate-800 px-6 py-3 rounded-xl border border-gray-200 dark:border-slate-700 shadow-sm">
               <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-green-600 rounded-lg flex items-center justify-center">
                 <Target className="h-5 w-5 text-white" />
               </div>
               <div>
-                <div className="text-sm text-gray-500">Questions</div>
-                <div className="font-bold text-gray-900">{session.questions.length} total</div>
+                <div className="text-sm text-gray-500 dark:text-gray-400">Questions</div>
+                <div className="font-bold text-gray-900 dark:text-white">{session.questions.length} total</div>
               </div>
             </div>
             
-            <div className="flex items-center space-x-3 bg-white px-6 py-3 rounded-xl border border-gray-200 shadow-sm">
+            <div className="flex items-center space-x-3 bg-white dark:bg-slate-800 px-6 py-3 rounded-xl border border-gray-200 dark:border-slate-700 shadow-sm">
               <div className="w-10 h-10 bg-gradient-to-r from-amber-500 to-amber-600 rounded-lg flex items-center justify-center">
                 <Calendar className="h-5 w-5 text-white" />
               </div>
               <div>
-                <div className="text-sm text-gray-500">Date</div>
-                <div className="font-bold text-gray-900">
+                <div className="text-sm text-gray-500 dark:text-gray-400">Date</div>
+                <div className="font-bold text-gray-900 dark:text-white">
                   {session.createdAt.toLocaleDateString('en-US', { 
                     month: 'short', 
                     day: 'numeric',
@@ -218,9 +220,9 @@ const Results = () => {
         {/* Main Analysis Grid */}
         <div className="grid lg:grid-cols-3 gap-8 mb-12">
           {/* Performance Breakdown */}
-          <Card className="lg:col-span-2 bg-white border border-gray-200 shadow-sm rounded-2xl">
-            <CardHeader className="pb-4 border-b border-gray-100">
-              <CardTitle className="flex items-center text-xl">
+          <Card className="lg:col-span-2 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 shadow-sm rounded-2xl">
+            <CardHeader className="pb-4 border-b border-gray-100 dark:border-slate-700">
+              <CardTitle className="flex items-center text-xl dark:text-white">
                 <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mr-4">
                   <BarChart3 className="h-6 w-6 text-white" />
                 </div>
@@ -249,13 +251,13 @@ const Results = () => {
               </div>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
                 {radarData.map((skill, index) => (
-                  <div key={index} className="bg-gray-50 rounded-xl p-4 border border-gray-200">
+                  <div key={index} className="bg-gray-50 dark:bg-slate-700 rounded-xl p-4 border border-gray-200 dark:border-slate-600">
                     <div className={`w-12 h-12 bg-gradient-to-r ${skill.color} rounded-xl flex items-center justify-center mb-3`}>
                       {skill.icon}
                     </div>
-                    <div className="font-bold text-gray-900">{skill.skill}</div>
-                    <div className="text-2xl font-bold text-gray-900">{skill.value / 10}<span className="text-gray-500 text-lg">/10</span></div>
-                    <div className="h-2 bg-gray-200 rounded-full mt-2 overflow-hidden">
+                    <div className="font-bold text-gray-900 dark:text-white">{skill.skill}</div>
+                    <div className="text-2xl font-bold text-gray-900 dark:text-white">{skill.value / 10}<span className="text-gray-500 dark:text-gray-400 text-lg">/10</span></div>
+                    <div className="h-2 bg-gray-200 dark:bg-slate-600 rounded-full mt-2 overflow-hidden">
                       <div 
                         className={`h-full bg-gradient-to-r ${skill.color} rounded-full`}
                         style={{ width: `${skill.value}%` }}
@@ -268,9 +270,9 @@ const Results = () => {
           </Card>
 
           {/* Question-by-Question Scores */}
-          <Card className="bg-white border border-gray-200 shadow-sm rounded-2xl">
-            <CardHeader className="pb-4 border-b border-gray-100">
-              <CardTitle className="flex items-center text-xl">
+          <Card className="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 shadow-sm rounded-2xl">
+            <CardHeader className="pb-4 border-b border-gray-100 dark:border-slate-700">
+              <CardTitle className="flex items-center text-xl dark:text-white">
                 <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mr-4">
                   <LineChart className="h-6 w-6 text-white" />
                 </div>
@@ -280,23 +282,23 @@ const Results = () => {
             <CardContent className="pt-6">
               <div className="space-y-6">
                 {session.feedback.map((feedback, i) => (
-                  <div key={i} className="group p-4 rounded-xl border border-gray-200 hover:border-blue-300 hover:bg-blue-50/50 transition-all">
+                  <div key={i} className="group p-4 rounded-xl border border-gray-200 dark:border-slate-600 hover:border-blue-300 dark:hover:border-blue-500 hover:bg-blue-50/50 dark:hover:bg-slate-700/50 transition-all">
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center">
-                        <div className="w-8 h-8 bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg flex items-center justify-center mr-3">
-                          <span className="font-bold text-gray-700">Q{i + 1}</span>
+                        <div className="w-8 h-8 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-slate-700 dark:to-slate-600 rounded-lg flex items-center justify-center mr-3">
+                          <span className="font-bold text-gray-700 dark:text-gray-300">Q{i + 1}</span>
                         </div>
-                        <span className="font-medium text-gray-900">Question {i + 1}</span>
+                        <span className="font-medium text-gray-900 dark:text-white">Question {i + 1}</span>
                       </div>
                       <div className={`text-2xl font-bold ${getScoreColor(feedback.score)}`}>
-                        {feedback.score}<span className="text-gray-500 text-lg">/10</span>
+                        {feedback.score}<span className="text-gray-500 dark:text-gray-400 text-lg">/10</span>
                       </div>
                     </div>
                     <Progress 
                       value={feedback.score * 10} 
                       className="h-2 bg-gray-200 [&>div]:bg-gradient-to-r [&>div]:from-blue-500 [&>div]:to-blue-600"
                     />
-                    <div className="flex items-center text-sm text-gray-500 mt-3">
+                    <div className="flex items-center text-sm text-gray-500 dark:text-gray-400 mt-3">
                       <Clock className="h-4 w-4 mr-2" />
                       Time taken: {Math.floor((feedback.timeTaken || 0) / 60)}:{((feedback.timeTaken || 0) % 60).toString().padStart(2, '0')}
                     </div>
@@ -318,24 +320,24 @@ const Results = () => {
         {/* Feedback Summary Grid */}
         <div className="grid md:grid-cols-3 gap-8 mb-12">
           {/* Strengths */}
-          <div className="bg-gradient-to-br from-green-50 to-green-100 border border-green-200 rounded-2xl overflow-hidden">
+          <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950 dark:to-green-900 border border-green-200 dark:border-green-800 rounded-2xl overflow-hidden">
             <div className="p-6">
               <div className="flex items-center mb-6">
                 <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-green-600 rounded-xl flex items-center justify-center mr-4">
                   <CheckCircle2 className="h-7 w-7 text-white" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-gray-900">Your Strengths</h3>
-                  <p className="text-green-700 text-sm">Areas where you excelled</p>
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white">Your Strengths</h3>
+                  <p className="text-green-700 dark:text-green-300 text-sm">Areas where you excelled</p>
                 </div>
               </div>
               <ul className="space-y-4">
                 {allStrengths.map((s, i) => (
-                  <li key={i} className="flex items-start p-4 bg-white/80 rounded-xl border border-green-200/50">
-                    <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
+                  <li key={i} className="flex items-start p-4 bg-white/80 dark:bg-slate-700/50 rounded-xl border border-green-200/50 dark:border-green-800/50">
+                    <div className="w-8 h-8 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
                       <div className="w-3 h-3 bg-green-500 rounded-full"></div>
                     </div>
-                    <span className="text-gray-800">{s}</span>
+                    <span className="text-gray-800 dark:text-gray-200">{s}</span>
                   </li>
                 ))}
               </ul>
@@ -343,24 +345,24 @@ const Results = () => {
           </div>
 
           {/* Areas to Improve */}
-          <div className="bg-gradient-to-br from-amber-50 to-amber-100 border border-amber-200 rounded-2xl overflow-hidden">
+          <div className="bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-950 dark:to-amber-900 border border-amber-200 dark:border-amber-800 rounded-2xl overflow-hidden">
             <div className="p-6">
               <div className="flex items-center mb-6">
                 <div className="w-12 h-12 bg-gradient-to-r from-amber-500 to-amber-600 rounded-xl flex items-center justify-center mr-4">
                   <XCircle className="h-7 w-7 text-white" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-gray-900">Areas to Improve</h3>
-                  <p className="text-amber-700 text-sm">Focus areas for growth</p>
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white">Areas to Improve</h3>
+                  <p className="text-amber-700 dark:text-amber-300 text-sm">Focus areas for growth</p>
                 </div>
               </div>
               <ul className="space-y-4">
                 {allWeaknesses.map((w, i) => (
-                  <li key={i} className="flex items-start p-4 bg-white/80 rounded-xl border border-amber-200/50">
-                    <div className="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
+                  <li key={i} className="flex items-start p-4 bg-white/80 dark:bg-slate-700/50 rounded-xl border border-amber-200/50 dark:border-amber-800/50">
+                    <div className="w-8 h-8 bg-amber-100 dark:bg-amber-900 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
                       <div className="w-3 h-3 bg-amber-500 rounded-full"></div>
                     </div>
-                    <span className="text-gray-800">{w}</span>
+                    <span className="text-gray-800 dark:text-gray-200">{w}</span>
                   </li>
                 ))}
               </ul>
@@ -368,24 +370,24 @@ const Results = () => {
           </div>
 
           {/* Recommendations */}
-          <div className="bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-2xl overflow-hidden">
+          <div className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950 dark:to-blue-900 border border-blue-200 dark:border-blue-800 rounded-2xl overflow-hidden">
             <div className="p-6">
               <div className="flex items-center mb-6">
                 <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mr-4">
                   <Lightbulb className="h-7 w-7 text-white" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-gray-900">Recommendations</h3>
-                  <p className="text-blue-700 text-sm">Actionable next steps</p>
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white">Recommendations</h3>
+                  <p className="text-blue-700 dark:text-blue-300 text-sm">Actionable next steps</p>
                 </div>
               </div>
               <ul className="space-y-4">
                 {allImprovements.map((imp, i) => (
-                  <li key={i} className="flex items-start p-4 bg-white/80 rounded-xl border border-blue-200/50">
-                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
-                      <span className="text-blue-600 font-bold text-sm">{i + 1}</span>
+                  <li key={i} className="flex items-start p-4 bg-white/80 dark:bg-slate-700/50 rounded-xl border border-blue-200/50 dark:border-blue-800/50">
+                    <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
+                      <span className="text-blue-600 dark:text-blue-300 font-bold text-sm">{i + 1}</span>
                     </div>
-                    <span className="text-gray-800">{imp}</span>
+                    <span className="text-gray-800 dark:text-gray-200">{imp}</span>
                   </li>
                 ))}
               </ul>
@@ -446,7 +448,7 @@ const Results = () => {
             <Button 
               size="lg" 
               variant="outline" 
-              className="w-full border-gray-300 hover:border-blue-500 hover:bg-blue-50 text-gray-700 px-12 py-7 text-lg rounded-xl backdrop-blur-sm"
+              className="w-full border-gray-300 dark:border-slate-600 hover:border-blue-500 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-slate-800 text-gray-700 dark:text-gray-300 px-12 py-7 text-lg rounded-xl backdrop-blur-sm"
             >
               <Home className="h-6 w-6 mr-3" />
               Go to Dashboard

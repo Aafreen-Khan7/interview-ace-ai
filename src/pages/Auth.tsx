@@ -10,6 +10,7 @@ import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import { Sparkles, ArrowLeft, Loader2, Mail, Lock, User, Eye, EyeOff, Brain, Shield, BarChart } from 'lucide-react';
 
+
 const GoogleIcon = () => (
   <svg viewBox="0 0 24 24" className="w-5 h-5" xmlns="http://www.w3.org/2000/svg">
     <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -114,17 +115,19 @@ const Auth = () => {
             <Brain size={24} />
           </div>
           <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
-            InterviewAce.AI
+            InterviewAceAI
           </span>
         </div>
-        <Button
-          variant="outline"
-          onClick={() => navigate('/')}
-          className="border-gray-600 hover:bg-gray-800 hover:text-white text-gray-300"
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to Home
-        </Button>
+        <div className="flex items-center space-x-4">
+          <Button
+            variant="outline"
+            onClick={() => navigate('/')}
+            className="border-gray-600 hover:bg-gray-800 hover:text-white text-gray-300"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Home
+          </Button>
+        </div>
       </header>
 
       {/* Main Content */}

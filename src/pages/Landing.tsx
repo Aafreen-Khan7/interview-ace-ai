@@ -1,14 +1,14 @@
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { 
-  ArrowRight, 
-  Brain, 
-  Target, 
-  TrendingUp, 
-  Mic, 
-  MessageSquare, 
-  BarChart3, 
-  Shield, 
+import {
+  ArrowRight,
+  Brain,
+  Target,
+  TrendingUp,
+  Mic,
+  MessageSquare,
+  BarChart3,
+  Shield,
   Clock,
   Users,
   Award,
@@ -472,9 +472,9 @@ const Landing = () => {
 
           {/* Bottom Bar */}
           <div className="pt-8 border-t border-gray-800">
-            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="flex flex-col  md:flex-row items-center justify-between gap-6">
               <div className="flex items-center space-x-2 text-gray-500">
-                <span>© 2024 InterviewAce.AI. All rights reserved.</span>
+                <span>© 2024 InterviewAceAI. All rights reserved.</span>
               </div>
               <div className="flex items-center space-x-6 text-sm text-gray-500">
                 <a href="#" className="hover:text-gray-300 transition-colors">Privacy Policy</a>

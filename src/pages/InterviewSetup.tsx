@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
 import { Slider } from '@/components/ui/slider';
 import { useToast } from '@/hooks/use-toast';
+
 import { 
   Brain, 
   ArrowRight, 
@@ -35,6 +36,7 @@ import {
 import { JOB_ROLES, DIFFICULTIES, ROUND_TYPES, JobRole, Difficulty, RoundType } from '@/types/interview';
 import { parseResume } from '@/lib/gemini';
 import { cn } from '@/lib/utils';
+
 
 const InterviewSetup = () => {
   const navigate = useNavigate();
@@ -166,16 +168,16 @@ const InterviewSetup = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 dark:from-slate-950 dark:to-slate-900">
       {/* Animated Background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-64 h-64 bg-blue-200/20 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-200/10 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-to-br from-transparent via-blue-50/5 to-transparent"></div>
+        <div className="absolute top-20 left-10 w-64 h-64 bg-blue-200/20 dark:bg-blue-900/30 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-200/10 dark:bg-purple-900/20 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-to-br from-transparent via-blue-50/5 dark:via-blue-950/5 to-transparent"></div>
       </div>
 
       {/* Navigation */}
-      <nav className="relative z-10 bg-white/80 backdrop-blur-xl border-b border-gray-200/50">
+      <nav className="relative z-10 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-gray-200/50 dark:border-slate-700/50">
         <div className="px-8 py-4">
           <div className="flex items-center justify-between">
             <Link to="/" className="flex items-center space-x-3">
@@ -183,12 +185,12 @@ const InterviewSetup = () => {
                 <Brain className="h-6 w-6 text-white" />
               </div>
               <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
-                InterviewAce.AI
+                InterviewAceAI
               </span>
             </Link>
             <div className="flex items-center space-x-4">
               <Link to="/dashboard">
-                <Button variant="outline" className="border-gray-300 hover:bg-gray-100 text-gray-700">
+                <Button variant="outline" className="border-gray-300 dark:border-slate-600 hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-700 dark:text-gray-300">
                   Dashboard
                 </Button>
               </Link>
@@ -221,7 +223,7 @@ const InterviewSetup = () => {
             </div>
           ))}
           <div className="ml-8 hidden md:block">
-            <div className="text-sm font-medium text-gray-600">
+            <div className="text-sm font-medium text-gray-600 dark:text-gray-400">
               {step === 1 && "Select Role"}
               {step === 2 && "Configure Interview"}
               {step === 3 && "Review & Start"}
@@ -236,10 +238,10 @@ const InterviewSetup = () => {
               <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl mb-6">
                 <Users className="h-10 w-10 text-white" />
               </div>
-              <h1 className="text-4xl font-bold text-gray-900 mb-4">
+              <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
                 What role are you preparing for?
               </h1>
-              <p className="text-gray-600 max-w-2xl mx-auto text-lg">
+              <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto text-lg">
                 Select your target position. Our AI will tailor questions specifically for this role.
               </p>
             </div>
@@ -261,8 +263,8 @@ const InterviewSetup = () => {
                     className={cn(
                       "cursor-pointer transition-all duration-300 rounded-2xl border-2 overflow-hidden group",
                       selectedRole === role.value 
-                        ? "border-blue-500 bg-gradient-to-br from-blue-50 to-blue-100 shadow-lg transform scale-[1.02]"
-                        : "border-gray-200 hover:border-blue-300 hover:bg-white hover:shadow-md"
+                        ? "border-blue-500 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-slate-800 dark:to-slate-700 shadow-lg transform scale-[1.02]"
+                        : "border-gray-200 dark:border-slate-600 hover:border-blue-300 dark:hover:border-blue-500 hover:bg-white dark:hover:bg-slate-800 hover:shadow-md"
                     )}
                     onClick={() => setSelectedRole(role.value)}
                   >
@@ -271,14 +273,14 @@ const InterviewSetup = () => {
                         "w-14 h-14 rounded-xl flex items-center justify-center mb-4 transition-colors",
                         selectedRole === role.value 
                           ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white"
-                          : "bg-gray-100 text-gray-600 group-hover:bg-blue-100 group-hover:text-blue-600"
+                          : "bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-400 group-hover:bg-blue-100 dark:group-hover:bg-blue-900 group-hover:text-blue-600"
                       )}>
                         {roleIcons[role.value] || <Code className="h-6 w-6" />}
                       </div>
-                      <h3 className="font-bold text-gray-900 text-lg mb-2">{role.label}</h3>
-                      <p className="text-sm text-gray-600">AI-powered interview preparation</p>
+                      <h3 className="font-bold text-gray-900 dark:text-white text-lg mb-2">{role.label}</h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">AI-powered interview preparation</p>
                       {selectedRole === role.value && (
-                        <div className="mt-4 flex items-center text-blue-600 font-medium">
+                        <div className="mt-4 flex items-center text-blue-600 dark:text-blue-400 font-medium">
                           <CheckCircle2 className="h-5 w-5 mr-2" />
                           Selected
                         </div>
@@ -298,10 +300,10 @@ const InterviewSetup = () => {
               <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-purple-500 to-purple-600 rounded-2xl mb-6">
                 <Target className="h-10 w-10 text-white" />
               </div>
-              <h1 className="text-4xl font-bold text-gray-900 mb-4">
+              <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
                 Configure Your Interview
               </h1>
-              <p className="text-gray-600 max-w-2xl mx-auto text-lg">
+              <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto text-lg">
                 Customize the difficulty, question types, and upload your resume for personalized questions.
               </p>
             </div>
@@ -310,29 +312,29 @@ const InterviewSetup = () => {
               {/* Left Column - Resume & Difficulty */}
               <div className="space-y-8">
                 {/* Resume Upload */}
-                <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
+                <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 shadow-sm p-6">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
                     <FileCheck className="h-6 w-6 mr-3 text-blue-600" />
                     Upload Your Resume (Optional)
                   </h3>
-                  <Card className="border-2 border-dashed border-gray-300 hover:border-blue-400 transition-colors">
+                  <Card className="border-2 border-dashed border-gray-300 dark:border-slate-600 hover:border-blue-400 dark:hover:border-blue-500 transition-colors dark:bg-slate-700/50">
                     <CardContent className="p-8">
                       {!resumeFile ? (
                         <div 
                           className="text-center cursor-pointer"
                           onClick={() => fileInputRef.current?.click()}
                         >
-                          <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-blue-200 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                            <Upload className="h-10 w-10 text-blue-600" />
+                          <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                            <Upload className="h-10 w-10 text-blue-600 dark:text-blue-400" />
                           </div>
-                          <p className="font-bold text-gray-900 text-lg mb-2">Upload Resume</p>
-                          <p className="text-gray-600 mb-4">
+                          <p className="font-bold text-gray-900 dark:text-white text-lg mb-2">Upload Resume</p>
+                          <p className="text-gray-600 dark:text-gray-400 mb-4">
                             Get personalized questions based on your experience
                           </p>
-                          <p className="text-sm text-gray-500">Supports PDF and DOCX files up to 5MB</p>
+                          <p className="text-sm text-gray-500 dark:text-gray-400">Supports PDF and DOCX files up to 5MB</p>
                           <Button 
                             variant="outline" 
-                            className="mt-6 border-blue-300 text-blue-600 hover:bg-blue-50"
+                            className="mt-6 border-blue-300 dark:border-blue-600 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-slate-700"
                           >
                             Choose File
                           </Button>
@@ -345,15 +347,15 @@ const InterviewSetup = () => {
                           />
                         </div>
                       ) : (
-                        <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl p-6">
+                        <div className="bg-gradient-to-r from-blue-50 to-blue-100 dark:from-slate-700 dark:to-slate-600 rounded-xl p-6">
                           <div className="flex items-center justify-between mb-4">
                             <div className="flex items-center">
                               <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-green-600 rounded-xl flex items-center justify-center mr-4">
                                 <FileText className="h-6 w-6 text-white" />
                               </div>
                               <div>
-                                <p className="font-bold text-gray-900">{resumeFile.name}</p>
-                                <p className="text-sm text-gray-600">
+                                <p className="font-bold text-gray-900 dark:text-white">{resumeFile.name}</p>
+                                <p className="text-sm text-gray-600 dark:text-gray-400">
                                   {(resumeFile.size / 1024 / 1024).toFixed(2)} MB
                                 </p>
                               </div>
@@ -363,23 +365,23 @@ const InterviewSetup = () => {
                               size="icon"
                               onClick={removeResume}
                               disabled={isParsingResume}
-                              className="hover:bg-white/50"
+                              className="hover:bg-white/50 dark:hover:bg-slate-500/50"
                             >
                               {isParsingResume ? (
                                 <Loader2 className="h-5 w-5 animate-spin text-blue-600" />
                               ) : (
-                                <X className="h-5 w-5 text-gray-500 hover:text-red-500" />
+                                <X className="h-5 w-5 text-gray-500 dark:text-gray-400 hover:text-red-500" />
                               )}
                             </Button>
                           </div>
-                          <div className="bg-white/80 rounded-lg p-4">
+                          <div className="bg-white/80 dark:bg-slate-800/80 rounded-lg p-4">
                             {isParsingResume ? (
                               <div className="flex items-center">
                                 <Loader2 className="h-5 w-5 animate-spin text-blue-600 mr-3" />
-                                <span className="text-blue-600 font-medium">Analyzing your resume...</span>
+                                <span className="text-blue-600 dark:text-blue-400 font-medium">Analyzing your resume...</span>
                               </div>
                             ) : (
-                              <div className="flex items-center text-green-600 font-medium">
+                              <div className="flex items-center text-green-600 dark:text-green-400 font-medium">
                                 <CheckCircle2 className="h-5 w-5 mr-3" />
                                 Ready for personalized questions
                               </div>
@@ -392,8 +394,8 @@ const InterviewSetup = () => {
                 </div>
 
                 {/* Difficulty Selection */}
-                <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
+                <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 shadow-sm p-6">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
                     <Zap className="h-6 w-6 mr-3 text-amber-600" />
                     Difficulty Level
                   </h3>
@@ -427,12 +429,12 @@ const InterviewSetup = () => {
               </div>
 
               {/* Right Column - Round Type */}
-              <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
+              <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 shadow-sm p-6">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
                   <BarChart className="h-6 w-6 mr-3 text-purple-600" />
                   Question Types
                 </h3>
-                <p className="text-gray-600 mb-6">
+                <p className="text-gray-600 dark:text-gray-400 mb-6">
                   Select the types of questions you want to practice. Choose "Mixed" for a comprehensive interview.
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -446,8 +448,8 @@ const InterviewSetup = () => {
                         className={cn(
                           "cursor-pointer p-5 rounded-xl border-2 transition-all duration-300 h-full",
                           selectedRoundType === type.value 
-                            ? "border-purple-500 bg-gradient-to-br from-purple-50 to-purple-100 shadow-md"
-                            : "border-gray-200 hover:border-purple-300 hover:bg-purple-50/50"
+                            ? "border-purple-500 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-slate-700 dark:to-slate-600 shadow-md"
+                            : "border-gray-200 dark:border-slate-600 hover:border-purple-300 dark:hover:border-purple-500 hover:bg-purple-50/50 dark:hover:bg-slate-700/50"
                         )}
                         onClick={() => setSelectedRoundType(type.value)}
                       >
@@ -457,7 +459,7 @@ const InterviewSetup = () => {
                               "w-10 h-10 rounded-lg flex items-center justify-center mr-3",
                               selectedRoundType === type.value 
                                 ? "bg-gradient-to-r from-purple-500 to-purple-600 text-white"
-                                : "bg-gray-100 text-gray-600"
+                                : "bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-400"
                             )}>
                               {typeValue === 'technical' && <Code className="h-5 w-5" />}
                               {typeValue === 'behavioral' && <Users className="h-5 w-5" />}
@@ -465,13 +467,13 @@ const InterviewSetup = () => {
                               {typeValue === 'mixed' && <Globe className="h-5 w-5" />}
                             </div>
                             <div>
-                              <p className="font-bold text-gray-900">{type.label}</p>
-                              <p className="text-gray-600 text-sm mt-1">{type.description}</p>
+                              <p className="font-bold text-gray-900 dark:text-white">{type.label}</p>
+                              <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">{type.description}</p>
                             </div>
                           </div>
                           {selectedRoundType === type.value && (
-                            <div className="mt-auto pt-3 border-t border-purple-200">
-                              <div className="flex items-center text-purple-600 font-medium">
+                            <div className="mt-auto pt-3 border-t border-purple-200 dark:border-purple-800">
+                              <div className="flex items-center text-purple-600 dark:text-purple-400 font-medium">
                                 <CheckCircle2 className="h-5 w-5 mr-2" />
                                 Selected
                               </div>
@@ -494,10 +496,10 @@ const InterviewSetup = () => {
               <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-green-500 to-green-600 rounded-2xl mb-6">
                 <Rocket className="h-10 w-10 text-white" />
               </div>
-              <h1 className="text-4xl font-bold text-gray-900 mb-4">
+              <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
                 Review & Start Your Interview
               </h1>
-              <p className="text-gray-600 max-w-2xl mx-auto text-lg">
+              <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto text-lg">
                 Finalize your settings and begin your AI-powered interview session.
               </p>
             </div>
@@ -506,21 +508,21 @@ const InterviewSetup = () => {
               {/* Left Column - Question Count & Proctoring */}
               <div className="lg:col-span-2 space-y-8">
                 {/* Question Count */}
-                <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-8">
-                  <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
+                <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 shadow-sm p-8">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
                     <Clock className="h-6 w-6 mr-3 text-blue-600" />
                     Interview Duration
                   </h3>
                   <div className="space-y-6">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-4xl font-bold text-gray-900">{questionCount} Questions</p>
-                        <p className="text-gray-600 mt-2">
+                        <p className="text-4xl font-bold text-gray-900 dark:text-white">{questionCount} Questions</p>
+                        <p className="text-gray-600 dark:text-gray-400 mt-2">
                           Estimated time: {questionCount * 5} minutes
                         </p>
                       </div>
                       <div className="text-right">
-                        <div className="text-sm text-gray-500 mb-1">Questions</div>
+                        <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">Questions</div>
                         <div className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent">
                           {questionCount}
                         </div>
@@ -534,7 +536,7 @@ const InterviewSetup = () => {
                       step={1}
                       className="w-full [&>div>span]:bg-gradient-to-r [&>div>span]:from-blue-500 [&>div>span]:to-blue-600"
                     />
-                    <div className="flex justify-between text-sm text-gray-500">
+                    <div className="flex justify-between text-sm text-gray-500 dark:text-gray-400">
                       <div className="text-center">
                         <div className="font-medium">Quick</div>
                         <div>3 questions</div>
@@ -552,20 +554,20 @@ const InterviewSetup = () => {
                 </div>
 
                 {/* Proctoring */}
-                <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl border border-blue-200 p-8">
-                  <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
+                <div className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-slate-800 dark:to-slate-700 rounded-2xl border border-blue-200 dark:border-slate-600 p-8">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
                     <Shield className="h-6 w-6 mr-3 text-blue-600" />
                     Proctoring Settings
                   </h3>
                   <div className="space-y-4">
-                    <div className="flex items-center justify-between p-4 bg-white/80 rounded-xl border border-blue-200">
+                    <div className="flex items-center justify-between p-4 bg-white/80 dark:bg-slate-700/50 rounded-xl border border-blue-200 dark:border-slate-600">
                       <div className="flex items-center">
-                        <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mr-4">
+                        <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-xl flex items-center justify-center mr-4">
                           <Camera className="h-6 w-6 text-blue-600" />
                         </div>
                         <div>
-                          <p className="font-bold text-gray-900">Camera Proctoring</p>
-                          <p className="text-gray-600 text-sm">Monitor your session for integrity</p>
+                          <p className="font-bold text-gray-900 dark:text-white">Camera Proctoring</p>
+                          <p className="text-gray-600 dark:text-gray-400 text-sm">Monitor your session for integrity</p>
                         </div>
                       </div>
                       <Label className="flex items-center gap-3 cursor-not-allowed opacity-70">
@@ -585,13 +587,13 @@ const InterviewSetup = () => {
                       <div className={cn(
                         "p-4 rounded-xl border transition-all",
                         cameraAllowed 
-                          ? "bg-gradient-to-r from-green-50 to-green-100 border-green-300"
-                          : "bg-gradient-to-r from-amber-50 to-amber-100 border-amber-300"
+                          ? "bg-gradient-to-r from-green-50 to-green-100 dark:from-green-950 dark:to-green-900 border-green-300 dark:border-green-800"
+                          : "bg-gradient-to-r from-amber-50 to-amber-100 dark:from-amber-950 dark:to-amber-900 border-amber-300 dark:border-amber-800"
                       )}>
                         <div className="flex items-center">
                           <div className={cn(
                             "w-8 h-8 rounded-full flex items-center justify-center mr-3",
-                            cameraAllowed ? "bg-green-100" : "bg-amber-100"
+                            cameraAllowed ? "bg-green-100 dark:bg-green-900" : "bg-amber-100 dark:bg-amber-900"
                           )}>
                             {cameraAllowed ? (
                               <CheckCircle2 className="h-5 w-5 text-green-600" />
@@ -602,13 +604,13 @@ const InterviewSetup = () => {
                           <div>
                             <p className={cn(
                               "font-bold",
-                              cameraAllowed ? "text-green-800" : "text-amber-800"
+                              cameraAllowed ? "text-green-800 dark:text-green-200" : "text-amber-800 dark:text-amber-200"
                             )}>
                               {cameraAllowed ? 'Camera permission granted' : 'Camera permission required'}
                             </p>
                             <p className={cn(
                               "text-sm",
-                              cameraAllowed ? "text-green-700" : "text-amber-700"
+                              cameraAllowed ? "text-green-700 dark:text-green-300" : "text-amber-700 dark:text-amber-300"
                             )}>
                               {cameraAllowed 
                                 ? 'Your camera is ready for proctored interview'
@@ -718,12 +720,12 @@ const InterviewSetup = () => {
         )}
 
         {/* Navigation Buttons */}
-        <div className="flex items-center justify-between mt-12 pt-8 border-t border-gray-200">
+        <div className="flex items-center justify-between mt-12 pt-8 border-t border-gray-200 dark:border-slate-700">
           <Button 
             variant="outline" 
             onClick={() => setStep(s => Math.max(1, s - 1))}
             disabled={step === 1}
-            className="border-gray-300 hover:border-blue-500 hover:bg-blue-50 text-gray-700 px-8 py-6 rounded-xl"
+            className="border-gray-300 dark:border-slate-600 hover:border-blue-500 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-slate-800 text-gray-700 dark:text-gray-300 px-8 py-6 rounded-xl"
           >
             <ArrowLeft className="h-5 w-5 mr-3" />
             Back
@@ -740,7 +742,7 @@ const InterviewSetup = () => {
             </Button>
           ) : (
             <div className="text-right">
-              <p className="text-sm text-gray-600 mb-2">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
                 Review your settings before starting
               </p>
             </div>
