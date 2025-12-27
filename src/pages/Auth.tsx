@@ -8,7 +8,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
-import { Sparkles, ArrowLeft, Loader2, Mail, Lock, User } from 'lucide-react';
+import { Sparkles, ArrowLeft, Loader2, Mail, Lock, User, Eye, EyeOff, Brain, Shield, BarChart } from 'lucide-react';
+
 
 const GoogleIcon = () => (
   <svg viewBox="0 0 24 24" className="w-5 h-5" xmlns="http://www.w3.org/2000/svg">
@@ -32,6 +33,9 @@ const Auth = () => {
   const [signupPassword, setSignupPassword] = useState('');
   const [signupName, setSignupName] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
+  const [showSignupPassword, setShowSignupPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -96,197 +100,298 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      {/* Background effects */}
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 text-white">
+      {/* Animated Background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-accent/10 rounded-full blur-3xl animate-pulse delay-1000" />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl animate-pulse delay-1000" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-cyan-500/10 rounded-full blur-2xl animate-pulse delay-500" />
       </div>
 
-      {/* Header */}
-      <header className="relative z-10 p-6">
-        <Button
-          variant="ghost"
-          onClick={() => navigate('/')}
-          className="text-muted-foreground hover:text-foreground"
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to Home
-        </Button>
+      {/* Header with Logo */}
+      <header className="relative z-10 p-6 flex justify-between items-center">
+        <div className="flex items-center space-x-3">
+          <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+            <Brain size={24} />
+          </div>
+          <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
+            InterviewAceAI
+          </span>
+        </div>
+        <div className="flex items-center space-x-4">
+          <Button
+            variant="outline"
+            onClick={() => navigate('/')}
+            className="border-gray-600 hover:bg-gray-800 hover:text-white text-gray-300"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Home
+          </Button>
+        </div>
       </header>
 
-      {/* Main content */}
-      <main className="relative z-10 flex-1 flex items-center justify-center p-6">
-        <Card className="w-full max-w-md bg-card/50 backdrop-blur-xl border-border/50">
-          <CardHeader className="text-center space-y-4">
-            <div className="mx-auto w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-              <Sparkles className="w-6 h-6 text-primary-foreground" />
-            </div>
-            <CardTitle className="text-2xl font-bold">AI Interview Practice</CardTitle>
-            <CardDescription>Sign in to track your progress across devices</CardDescription>
-          </CardHeader>
-
-          <CardContent>
-            {/* Google Sign In */}
-            <Button
-              variant="outline"
-              className="w-full mb-4 h-11 border-border/50"
-              onClick={handleGoogleLogin}
-              disabled={isGoogleLoading || isLoading}
-            >
-              {isGoogleLoading ? (
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              ) : (
-                <GoogleIcon />
-              )}
-              <span className="ml-2">Continue with Google</span>
-            </Button>
-
-            <div className="relative my-6">
-              <Separator />
-              <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-card px-2 text-xs text-muted-foreground">
-                or continue with email
+      {/* Main Content */}
+      <main className="relative z-10 flex min-h-[calc(100vh-88px)]">
+        {/* Left Side - Features */}
+        <div className="hidden lg:flex flex-1 flex-col justify-center p-12">
+          <div className="max-w-lg">
+            <h1 className="text-5xl font-bold mb-6 leading-tight">
+              Master Your Next
+              <span className="block bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
+                Technical Interview
               </span>
-            </div>
-
-            <Tabs defaultValue="login" className="w-full">
-              <TabsList className="grid w-full grid-cols-2 mb-6">
-                <TabsTrigger value="login">Login</TabsTrigger>
-                <TabsTrigger value="signup">Sign Up</TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="login">
-                <form onSubmit={handleLogin} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="login-email">Email</Label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                      <Input
-                        id="login-email"
-                        type="email"
-                        placeholder="you@example.com"
-                        value={loginEmail}
-                        onChange={(e) => setLoginEmail(e.target.value)}
-                        className="pl-10"
-                        disabled={isLoading}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="login-password">Password</Label>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                      <Input
-                        id="login-password"
-                        type="password"
-                        placeholder="••••••••"
-                        value={loginPassword}
-                        onChange={(e) => setLoginPassword(e.target.value)}
-                        className="pl-10"
-                        disabled={isLoading}
-                      />
-                    </div>
-                  </div>
-
-                  <Button type="submit" className="w-full" disabled={isLoading}>
-                    {isLoading ? (
-                      <>
-                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                        Signing in...
-                      </>
-                    ) : (
-                      'Sign In'
-                    )}
-                  </Button>
-                </form>
-              </TabsContent>
-
-              <TabsContent value="signup">
-                <form onSubmit={handleSignup} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-name">Full Name</Label>
-                    <div className="relative">
-                      <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                      <Input
-                        id="signup-name"
-                        type="text"
-                        placeholder="John Doe"
-                        value={signupName}
-                        onChange={(e) => setSignupName(e.target.value)}
-                        className="pl-10"
-                        disabled={isLoading}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-email">Email</Label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                      <Input
-                        id="signup-email"
-                        type="email"
-                        placeholder="you@example.com"
-                        value={signupEmail}
-                        onChange={(e) => setSignupEmail(e.target.value)}
-                        className="pl-10"
-                        disabled={isLoading}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-password">Password</Label>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                      <Input
-                        id="signup-password"
-                        type="password"
-                        placeholder="••••••••"
-                        value={signupPassword}
-                        onChange={(e) => setSignupPassword(e.target.value)}
-                        className="pl-10"
-                        disabled={isLoading}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="confirm-password">Confirm Password</Label>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                      <Input
-                        id="confirm-password"
-                        type="password"
-                        placeholder="••••••••"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        className="pl-10"
-                        disabled={isLoading}
-                      />
-                    </div>
-                  </div>
-
-                  <Button type="submit" className="w-full" disabled={isLoading}>
-                    {isLoading ? (
-                      <>
-                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                        Creating account...
-                      </>
-                    ) : (
-                      'Create Account'
-                    )}
-                  </Button>
-                </form>
-              </TabsContent>
-            </Tabs>
-
-            <p className="text-xs text-muted-foreground text-center mt-6">
-              By continuing, you agree to our Terms of Service and Privacy Policy
+            </h1>
+            <p className="text-gray-300 text-lg mb-10">
+              Join thousands of developers who ace their interviews with AI-powered practice, 
+              real-time feedback, and personalized coaching.
             </p>
-          </CardContent>
-        </Card>
+            
+            <div className="space-y-6">
+              {[
+                { icon: <Brain className="text-blue-400" />, title: "AI-Powered Interviews", desc: "Practice with intelligent interview simulations" },
+                { icon: <Shield className="text-green-400" />, title: "Real-time Feedback", desc: "Get instant analysis on your answers and delivery" },
+                { icon: <BarChart className="text-purple-400" />, title: "Progress Tracking", desc: "Monitor your improvement with detailed analytics" },
+              ].map((feature, idx) => (
+                <div key={idx} className="flex items-start space-x-4 p-4 rounded-xl bg-white/5 backdrop-blur-sm">
+                  <div className="p-3 bg-white/10 rounded-lg">
+                    {feature.icon}
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-lg">{feature.title}</h3>
+                    <p className="text-gray-400">{feature.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Right Side - Auth Form */}
+        <div className="flex-1 flex items-center justify-center p-6 lg:p-12">
+          <Card className="w-full max-w-md bg-gray-800/70 backdrop-blur-xl border-gray-700/50 shadow-2xl">
+            <CardHeader className="text-center space-y-6">
+              <div className="relative">
+                <div className="mx-auto w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg">
+                  <Sparkles className="w-8 h-8 text-white" />
+                </div>
+                <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-r from-green-400 to-cyan-400 rounded-full flex items-center justify-center">
+                  <div className="w-2 h-2 bg-white rounded-full"></div>
+                </div>
+              </div>
+              <div>
+                <CardTitle className="text-3xl font-bold mb-2">Welcome Back</CardTitle>
+                <CardDescription className="text-gray-400">
+                  Sign in to continue your interview preparation journey
+                </CardDescription>
+              </div>
+            </CardHeader>
+
+            <CardContent className="space-y-6">
+              {/* Google Sign In */}
+              <Button
+                variant="outline"
+                className="w-full h-12 border-gray-600 hover:bg-gray-700/50 hover:border-gray-500 text-gray-300 transition-all"
+                onClick={handleGoogleLogin}
+                disabled={isGoogleLoading || isLoading}
+              >
+                {isGoogleLoading ? (
+                  <Loader2 className="w-5 h-5 mr-3 animate-spin" />
+                ) : (
+                  <div className="flex items-center justify-center">
+                    <GoogleIcon />
+                  </div>
+                )}
+                <span className="ml-3 font-medium">Continue with Google</span>
+              </Button>
+
+              <div className="relative">
+                <Separator className="bg-gray-600" />
+                <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-gray-800 px-4 text-sm text-gray-400">
+                  or continue with email
+                </span>
+              </div>
+
+              <Tabs defaultValue="login" className="w-full">
+                <TabsList className="grid w-full grid-cols-2 mb-8 bg-gray-900/50 p-1 rounded-xl">
+                  <TabsTrigger 
+                    value="login" 
+                    className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-blue-700 data-[state=active]:text-white rounded-lg transition-all"
+                  >
+                    Login
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="signup" 
+                    className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-purple-700 data-[state=active]:text-white rounded-lg transition-all"
+                  >
+                    Sign Up
+                  </TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="login">
+                  <form onSubmit={handleLogin} className="space-y-6">
+                    <div className="space-y-3">
+                      <Label htmlFor="login-email" className="text-gray-300">Email Address</Label>
+                      <div className="relative">
+                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                        <Input
+                          id="login-email"
+                          type="email"
+                          placeholder="you@example.com"
+                          value={loginEmail}
+                          onChange={(e) => setLoginEmail(e.target.value)}
+                          className="pl-12 h-12 bg-gray-900/50 border-gray-600 text-white placeholder:text-gray-500 focus:border-blue-500 focus:ring-blue-500"
+                          disabled={isLoading}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-3">
+                      <Label htmlFor="login-password" className="text-gray-300">Password</Label>
+                      <div className="relative">
+                        <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                        <Input
+                          id="login-password"
+                          type={showLoginPassword ? "text" : "password"}
+                          placeholder="••••••••"
+                          value={loginPassword}
+                          onChange={(e) => setLoginPassword(e.target.value)}
+                          className="pl-12 pr-12 h-12 bg-gray-900/50 border-gray-600 text-white placeholder:text-gray-500 focus:border-blue-500 focus:ring-blue-500"
+                          disabled={isLoading}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowLoginPassword(!showLoginPassword)}
+                          className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300"
+                        >
+                          {showLoginPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                        </button>
+                      </div>
+                    </div>
+
+                    <Button 
+                      type="submit" 
+                      className="w-full h-12 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold text-base transition-all hover:shadow-lg"
+                      disabled={isLoading}
+                    >
+                      {isLoading ? (
+                        <>
+                          <Loader2 className="w-5 h-5 mr-3 animate-spin" />
+                          Signing in...
+                        </>
+                      ) : (
+                        'Sign In to Dashboard'
+                      )}
+                    </Button>
+                  </form>
+                </TabsContent>
+
+                <TabsContent value="signup">
+                  <form onSubmit={handleSignup} className="space-y-6">
+                    <div className="space-y-3">
+                      <Label htmlFor="signup-name" className="text-gray-300">Full Name</Label>
+                      <div className="relative">
+                        <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                        <Input
+                          id="signup-name"
+                          type="text"
+                          placeholder="John Doe"
+                          value={signupName}
+                          onChange={(e) => setSignupName(e.target.value)}
+                          className="pl-12 h-12 bg-gray-900/50 border-gray-600 text-white placeholder:text-gray-500 focus:border-blue-500 focus:ring-blue-500"
+                          disabled={isLoading}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-3">
+                      <Label htmlFor="signup-email" className="text-gray-300">Email Address</Label>
+                      <div className="relative">
+                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                        <Input
+                          id="signup-email"
+                          type="email"
+                          placeholder="you@example.com"
+                          value={signupEmail}
+                          onChange={(e) => setSignupEmail(e.target.value)}
+                          className="pl-12 h-12 bg-gray-900/50 border-gray-600 text-white placeholder:text-gray-500 focus:border-blue-500 focus:ring-blue-500"
+                          disabled={isLoading}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-3">
+                      <Label htmlFor="signup-password" className="text-gray-300">Password</Label>
+                      <div className="relative">
+                        <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                        <Input
+                          id="signup-password"
+                          type={showSignupPassword ? "text" : "password"}
+                          placeholder="••••••••"
+                          value={signupPassword}
+                          onChange={(e) => setSignupPassword(e.target.value)}
+                          className="pl-12 pr-12 h-12 bg-gray-900/50 border-gray-600 text-white placeholder:text-gray-500 focus:border-blue-500 focus:ring-blue-500"
+                          disabled={isLoading}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowSignupPassword(!showSignupPassword)}
+                          className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300"
+                        >
+                          {showSignupPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="space-y-3">
+                      <Label htmlFor="confirm-password" className="text-gray-300">Confirm Password</Label>
+                      <div className="relative">
+                        <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                        <Input
+                          id="confirm-password"
+                          type={showConfirmPassword ? "text" : "password"}
+                          placeholder="••••••••"
+                          value={confirmPassword}
+                          onChange={(e) => setConfirmPassword(e.target.value)}
+                          className="pl-12 pr-12 h-12 bg-gray-900/50 border-gray-600 text-white placeholder:text-gray-500 focus:border-blue-500 focus:ring-blue-500"
+                          disabled={isLoading}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                          className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300"
+                        >
+                          {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                        </button>
+                      </div>
+                    </div>
+
+                    <Button 
+                      type="submit" 
+                      className="w-full h-12 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-semibold text-base transition-all hover:shadow-lg"
+                      disabled={isLoading}
+                    >
+                      {isLoading ? (
+                        <>
+                          <Loader2 className="w-5 h-5 mr-3 animate-spin" />
+                          Creating account...
+                        </>
+                      ) : (
+                        'Create Free Account'
+                      )}
+                    </Button>
+                  </form>
+                </TabsContent>
+              </Tabs>
+
+              <p className="text-xs text-gray-500 text-center pt-6 border-t border-gray-700/50">
+                By continuing, you agree to our{' '}
+                <a href="#" className="text-blue-400 hover:text-blue-300 hover:underline">Terms of Service</a>{' '}
+                and{' '}
+                <a href="#" className="text-blue-400 hover:text-blue-300 hover:underline">Privacy Policy</a>
+              </p>
+            </CardContent>
+          </Card>
+        </div>
       </main>
     </div>
   );

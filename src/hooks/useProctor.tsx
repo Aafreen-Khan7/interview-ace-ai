@@ -187,7 +187,12 @@ import useProctorStore from '@/store/useProctorStore';
 import * as tf from '@tensorflow/tfjs';
 import * as blazeface from '@tensorflow-models/blazeface';
 
-type ViolationType = 'no-face' | 'multiple-faces' | 'look-away' | 'face-offscreen';
+type ViolationType =
+  | 'no-face'
+  | 'multiple-faces'
+  | 'look-away'
+  | 'face-offscreen'
+  | 'camera-covered';
 
 type UseProctorOptions = {
   videoRef: MutableRefObject<HTMLVideoElement | null>;
@@ -196,8 +201,14 @@ type UseProctorOptions = {
   userId?: string;
 };
 
-export function useProctor({ videoRef, onWarning, sessionId, userId }: UseProctorOptions) {
+export function useProctor({
+  videoRef,
+  onWarning,
+  sessionId,
+  userId,
+}: UseProctorOptions) {
   const enabled = useProctorStore((s) => s.enabled);
+  const setStatus = useProctorStore((s) => s.setStatus);
   const addViolation = useProctorStore((s) => s.addViolation);
   const addWarning = useProctorStore((s) => s.addWarning);
   const stopStore = useProctorStore((s) => s.stop);
@@ -209,10 +220,13 @@ export function useProctor({ videoRef, onWarning, sessionId, userId }: UseProcto
   const lastWarningTimeRef = useRef<number>(0);
   const consecutiveNoFaceRef = useRef<number>(0);
   const consecutiveMultiFaceRef = useRef<number>(0);
+  const consecutiveDarkFrameRef = useRef<number>(0);
 
   useEffect(() => {
-    if (!enabled) return;
-
+    if (!enabled) {
+      setStatus('idle');
+      return;
+    }
     let mounted = true;
 
     (async () => {
@@ -233,6 +247,11 @@ export function useProctor({ videoRef, onWarning, sessionId, userId }: UseProcto
         // Load BlazeFace model (official TF.js package)
         const model = await blazeface.load();
         modelRef.current = model;
+        
+        if (mounted) {
+          setStatus('ready');
+          console.log('Proctoring system ready and monitoring');
+        }
 
         console.info('BlazeFace model loaded successfully');
         (useProctorStore as any).setState?.({ status: 'ready', mode: 'reduced' });
@@ -260,7 +279,37 @@ export function useProctor({ videoRef, onWarning, sessionId, userId }: UseProcto
               const WARNING_COOLDOWN = 5000; // 5 sec
               const PERSISTENCE_THRESHOLD = 30; // ~1 sec at 30fps
 
-              if (faceCount === 0) {
+              const WARNING_COOLDOWN = 5000; // 5 seconds (reduced from 15s for better responsiveness)
+              const NO_FACE_PERSISTENCE = 45; // ~1.5 seconds (reduced from 90)
+              const MULTI_FACE_PERSISTENCE = 15; // ~0.5 seconds (reduced from 30)
+              const DARK_FRAME_PERSISTENCE = 30; // ~1 second (reduced from 60)
+
+              const canWarn =
+                now - lastWarningTimeRef.current > WARNING_COOLDOWN;
+
+              if (
+                consecutiveDarkFrameRef.current > DARK_FRAME_PERSISTENCE &&
+                canWarn
+              ) {
+                const violation = {
+                  id: String(now),
+                  type: 'camera-covered' as ViolationType,
+                  timestamp: now,
+                  message: 'Camera appears to be covered',
+                };
+
+                addWarning();
+                addViolation(violation);
+                onWarning?.('camera-covered', violation.message);
+                socketRef.current?.emit?.('violation', {
+                  ...violation,
+                  sessionId,
+                  userId,
+                });
+
+                lastWarningTimeRef.current = now;
+                consecutiveDarkFrameRef.current = 0;
+              } else if (faceCount === 0) {
                 consecutiveNoFaceRef.current++;
                 consecutiveMultiFaceRef.current = 0;
 
@@ -325,9 +374,10 @@ export function useProctor({ videoRef, onWarning, sessionId, userId }: UseProcto
       if (modelRef.current) modelRef.current.dispose?.();
       if (socketRef.current) socketRef.current.disconnect?.();
     };
-  }, [enabled, videoRef, onWarning, addViolation, addWarning, stopStore]);
+  }, [enabled]);
 
   return { enabled };
 }
+
 
 export default useProctor;

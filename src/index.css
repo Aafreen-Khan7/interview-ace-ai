@@ -9,36 +9,111 @@
     --background: 222 47% 6%;
     --foreground: 210 40% 98%;
 
-    --card: 222 47% 8%;
-    --card-foreground: 210 40% 98%;
+/* Base Styles */
+:root {
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 84% 4.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222.2 84% 4.9%;
+  --primary: 221.2 83.2% 53.3%;
+  --primary-foreground: 210 40% 98%;
+  --secondary: 210 40% 96.1%;
+  --secondary-foreground: 222.2 47.4% 11.2%;
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+  --accent: 210 40% 96.1%;
+  --accent-foreground: 222.2 47.4% 11.2%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 221.2 83.2% 53.3%;
+  --radius: 0.75rem;
+  --success: 142.1 70.6% 45.3%;
+  --warning: 47.9 95.8% 51.8%;
+  --info: 199 89% 48%;
 
-    --popover: 222 47% 8%;
-    --popover-foreground: 210 40% 98%;
+  --primary-blue: #3b82f6;
+  --primary-blue-dark: #1d4ed8;
+  --primary-purple: #8b5cf6;
+  --primary-green: #10b981;
+  --background-dark: #0f172a;
+  --background-light: #1e293b;
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+}
 
-    --primary: 174 72% 56%;
-    --primary-foreground: 222 47% 6%;
+.dark {
+  --background: 222.2 84% 4.9%;
+  --foreground: 210 40% 98%;
+  --card: 222.2 84% 4.9%;
+  --card-foreground: 210 40% 98%;
+  --popover: 222.2 84% 4.9%;
+  --popover-foreground: 210 40% 98%;
+  --primary: 217.2 91.2% 59.8%;
+  --primary-foreground: 222.2 47.4% 11.2%;
+  --secondary: 217.2 32.6% 17.5%;
+  --secondary-foreground: 210 40% 98%;
+  --muted: 217.2 32.6% 17.5%;
+  --muted-foreground: 215 20.2% 65.1%;
+  --accent: 217.2 32.6% 17.5%;
+  --accent-foreground: 210 40% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 217.2 32.6% 17.5%;
+  --input: 217.2 32.6% 17.5%;
+  --ring: 224.3 76.3% 48%;
 
-    --secondary: 222 30% 14%;
-    --secondary-foreground: 210 40% 98%;
+  --background-dark: #020617;
+  --background-light: #0f172a;
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+}
 
-    --muted: 222 30% 14%;
-    --muted-foreground: 215 20% 65%;
+/* Reset & Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-    --accent: 263 70% 58%;
-    --accent-foreground: 210 40% 98%;
+html {
+  scroll-behavior: smooth;
+}
 
-    --destructive: 0 72% 51%;
-    --destructive-foreground: 210 40% 98%;
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--background-dark);
+  color: var(--text-primary);
+  overflow-x: hidden;
+}
 
-    --border: 222 30% 18%;
-    --input: 222 30% 14%;
-    --ring: 174 72% 56%;
+/* Typography Enhancements */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+}
 
-    --radius: 0.75rem;
+h1 {
+  font-size: 3.5rem;
+  background: linear-gradient(135deg, #f8fafc 0%, #cbd5e1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
 
-    --success: 142 76% 46%;
-    --warning: 38 92% 50%;
-    --info: 199 89% 48%;
+h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+}
 
     --gradient-primary: linear-gradient(
       135deg,
@@ -56,18 +131,21 @@
       hsl(222 47% 4%) 100%
     );
 
-    --glass-bg: hsla(222, 47%, 10%, 0.6);
-    --glass-border: hsla(210, 40%, 98%, 0.08);
-
-    --shadow-glow: 0 0 40px hsla(174, 72%, 56%, 0.15);
-    --shadow-card: 0 8px 32px hsla(0, 0%, 0%, 0.4);
-  }
+p {
+  line-height: 1.6;
+  color: var(--text-secondary);
 }
 
-@layer base {
-  * {
-    @apply border-border;
-  }
+/* Link Styles */
+a {
+  color: var(--primary-blue);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: #60a5fa;
+}
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
@@ -84,24 +162,26 @@
   }
 }
 
-@layer components {
-  .glass-card {
-    background: var(--glass-bg);
-    border: 1px solid var(--glass-border);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-  }
+/* Utility Classes for Landing Page */
+.stats-grid {
+  display: grid;
+  gap: 2rem;
+}
 
-  .gradient-text {
-    background: var(--gradient-primary);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
+.stat-card {
+  position: relative;
+  overflow: hidden;
+}
 
-  .gradient-border {
-    position: relative;
-  }
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.5), transparent);
+}
 
   .gradient-border::before {
     content: "";
@@ -117,17 +197,23 @@
     mask-composite: exclude;
   }
 
-  .glow-effect {
-    box-shadow: var(--shadow-glow);
-  }
+.stat-value {
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 1;
+  margin: 0.5rem 0;
+}
 
-  .animate-float {
-    animation: float 6s ease-in-out infinite;
+@media (min-width: 768px) {
+  .stat-value {
+    font-size: 3.75rem;
   }
+}
 
-  .animate-pulse-glow {
-    animation: pulse-glow 2s ease-in-out infinite;
-  }
+.stat-label {
+  font-size: 1.125rem;
+  color: #94a3b8;
+  margin-top: 0.5rem;
 }
 
 @layer utilities {
@@ -150,6 +236,10 @@
       box-shadow: 0 0 40px hsla(174, 72%, 56%, 0.4);
     }
   }
+  100% {
+    background-position: 200% 0;
+  }
+}
 
   @keyframes slide-up {
     from {
@@ -161,10 +251,21 @@
       transform: translateY(0);
     }
   }
-
-  .animate-slide-up {
-    animation: slide-up 0.5s ease-out forwards;
+  
+  h3 {
+    font-size: 1.5rem;
   }
+  
+  .section-spacing {
+    padding: 3rem 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
 
   .animation-delay-100 {
     animation-delay: 100ms;
@@ -180,5 +281,12 @@
   }
   .animation-delay-500 {
     animation-delay: 500ms;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .no-print {
+    display: none;
   }
 }
