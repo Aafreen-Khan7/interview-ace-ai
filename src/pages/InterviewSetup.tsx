@@ -195,7 +195,11 @@ const InterviewSetup = () => {
                 </Button>
               </Link>
             </div>
-          </div>
+            <span className="text-lg font-display font-bold">PrepBot</span>
+          </Link>
+          <Link to="/dashboard">
+            <Button variant="ghost" size="sm">Dashboard</Button>
+          </Link>
         </div>
       </nav>
 
@@ -727,8 +731,8 @@ const InterviewSetup = () => {
             disabled={step === 1}
             className="border-gray-300 dark:border-slate-600 hover:border-blue-500 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-slate-800 text-gray-700 dark:text-gray-300 px-8 py-6 rounded-xl"
           >
-            <ArrowLeft className="h-5 w-5 mr-3" />
-            Back
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Backs
           </Button>
           
           {step < 3 ? (

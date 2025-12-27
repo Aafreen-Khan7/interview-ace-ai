@@ -271,13 +271,14 @@ const Profile = () => {
                 </Link>
               </div>
             </div>
-            <Link to="/dashboard">
-              <Button variant="outline" className="border-gray-300 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 text-gray-700 dark:text-gray-300 transition-all">
-                <ArrowLeft className="h-5 w-5 mr-2" />
-                Back to Dashboard
-              </Button>
-            </Link>
-          </div>
+            <span className="text-lg font-display font-bold">PrepBot</span>
+          </Link>
+          <Link to="/dashboard">
+            <Button variant="ghost">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Dashboard
+            </Button>
+          </Link>
         </div>
       </nav>
 

@@ -1,11 +1,13 @@
-/* Tailwind CSS Directives */
-/* Using PostCSS imports */
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap");
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
+@layer base {
+  :root {
+    --background: 222 47% 6%;
+    --foreground: 210 40% 98%;
 
 /* Base Styles */
 :root {
@@ -113,10 +115,21 @@ h2 {
   margin-bottom: 1.5rem;
 }
 
-h3 {
-  font-size: 1.875rem;
-  margin-bottom: 1rem;
-}
+    --gradient-primary: linear-gradient(
+      135deg,
+      hsl(174 72% 56%) 0%,
+      hsl(199 89% 48%) 100%
+    );
+    --gradient-accent: linear-gradient(
+      135deg,
+      hsl(263 70% 58%) 0%,
+      hsl(174 72% 56%) 100%
+    );
+    --gradient-dark: linear-gradient(
+      180deg,
+      hsl(222 47% 8%) 0%,
+      hsl(222 47% 4%) 100%
+    );
 
 p {
   line-height: 1.6;
@@ -134,17 +147,19 @@ a:hover {
   color: #60a5fa;
 }
 
-/* Focus Styles */
-:focus-visible {
-  outline: 2px solid var(--primary-blue);
-  outline-offset: 2px;
-  border-radius: 4px;
-}
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: "Inter", system-ui, sans-serif;
+  }
 
-/* Selection Color */
-::selection {
-  background-color: rgba(59, 130, 246, 0.3);
-  color: white;
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Space Grotesk", sans-serif;
+  }
 }
 
 /* Utility Classes for Landing Page */
@@ -168,13 +183,19 @@ a:hover {
   background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.5), transparent);
 }
 
-.icon-wrapper {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 1rem;
-  margin-bottom: 1.5rem;
-}
+  .gradient-border::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: var(--gradient-primary);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
 
 .stat-value {
   font-size: 3rem;
@@ -195,48 +216,40 @@ a:hover {
   margin-top: 0.5rem;
 }
 
-/* Background Patterns */
-.bg-grid-pattern {
-  background-image: 
-    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-  background-size: 40px 40px;
-}
+@layer utilities {
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
 
-.bg-dots-pattern {
-  background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
-  background-size: 20px 20px;
-}
-
-/* Loading States */
-.loading-shimmer {
-  background: linear-gradient(
-    90deg,
-    rgba(30, 41, 59, 0.4) 25%,
-    rgba(30, 41, 59, 0.8) 50%,
-    rgba(30, 41, 59, 0.4) 75%
-  );
-  background-size: 200% 100%;
-  animation: shimmer 2s infinite;
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
+  @keyframes pulse-glow {
+    0%,
+    100% {
+      box-shadow: 0 0 20px hsla(174, 72%, 56%, 0.2);
+    }
+    50% {
+      box-shadow: 0 0 40px hsla(174, 72%, 56%, 0.4);
+    }
   }
   100% {
     background-position: 200% 0;
   }
 }
 
-/* Responsive Design */
-@media (max-width: 640px) {
-  h1 {
-    font-size: 2.5rem;
-  }
-  
-  h2 {
-    font-size: 2rem;
+  @keyframes slide-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
   
   h3 {
@@ -254,11 +267,20 @@ a:hover {
   }
 }
 
-/* Dark Mode Support */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background-dark: #0a0a0a;
-    --background-light: #171717;
+  .animation-delay-100 {
+    animation-delay: 100ms;
+  }
+  .animation-delay-200 {
+    animation-delay: 200ms;
+  }
+  .animation-delay-300 {
+    animation-delay: 300ms;
+  }
+  .animation-delay-400 {
+    animation-delay: 400ms;
+  }
+  .animation-delay-500 {
+    animation-delay: 500ms;
   }
 }
 

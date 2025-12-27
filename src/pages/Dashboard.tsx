@@ -135,12 +135,23 @@ const Dashboard = () => {
                 </Link>
               </div>
             </div>
-            
-            <div className="flex items-center space-x-6">
-              <Link to="/setup">
-                <Button className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-2 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all">
-                  <Play className="h-4 w-4 mr-2" />
-                  New Interview
+            <span className="text-lg font-display font-bold">PrepBot</span>
+          </Link>
+          <div className="flex items-center gap-4">
+            <Link to="/setup">
+              <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
+                <Play className="w-4 h-4 mr-2" />
+                New Interview
+              </Button>
+            </Link>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                  <Avatar className="h-10 w-10">
+                    <AvatarFallback className="bg-primary/20 text-primary">
+                      {user?.name?.charAt(0)?.toUpperCase() || 'U'}
+                    </AvatarFallback>
+                  </Avatar>
                 </Button>
               </Link>
 
@@ -197,24 +208,8 @@ const Dashboard = () => {
       <main className="relative z-10 px-8 py-8">
         {/* Welcome Header */}
         <div className="mb-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
-                Welcome back, <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">{user?.name?.split(' ')[0]}!</span>
-              </h1>
-              <p className="text-gray-600 dark:text-gray-300">Your journey to interview mastery continues. Track progress and discover insights.</p>
-            </div>
-            <div className="flex items-center space-x-4">
-              <Button variant="outline" className="border-gray-300 hover:border-blue-500 text-gray-700 dark:border-gray-600 dark:text-gray-300 dark:hover:border-blue-400">
-                <Calendar className="h-4 w-4 mr-2" />
-                View Calendar
-              </Button>
-              <Button className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white">
-                <Zap className="h-4 w-4 mr-2" />
-                Quick Tips
-              </Button>
-            </div>
-          </div>
+          <h1 className="text-3xl font-display font-bold mb-2">Welcome back, {user?.name || 'U'} </h1>
+          <p className="text-muted-foreground">Track your progress and continue improving.</p>
         </div>
 
         {/* Stats Grid */}
