@@ -263,9 +263,9 @@ const Profile = () => {
               <Link to="/setup" className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors">
                 Interviews
               </Link>
-              <Link to="/results" className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors">
+              {/* <Link to="/results" className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors">
                 Results
-              </Link>
+              </Link> */}
               <Link to="/profile" className="text-blue-600 dark:text-blue-400 font-bold flex items-center">
                 <User className="h-5 w-5 mr-2" />
                 Profile

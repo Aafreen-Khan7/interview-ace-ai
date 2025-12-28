@@ -310,7 +310,7 @@ const Dashboard = () => {
                     </div>
                     <div className="relative">
                       <Progress value={skill.score * 10} className="h-3 bg-gray-100 dark:bg-gray-700 rounded-full" />
-                      <div className="absolute top-0 left-0 h-3 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full" style={{ width: `${skill.score * 10}%` }}></div>
+                      <div className="rounded-full absolute top-0 left-0 h-3 bg-gradient-to-r from-purple-500 to-purple-600 " style={{ width: `${skill.score * 10}%` }}></div>
                     </div>
                     <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400">
                       <span>Beginner</span>
